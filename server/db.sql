@@ -9,3 +9,13 @@ CREATE TABLE users (
   total_losses INTEGER DEFAULT 0,
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE activities(
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  type VARCHAR(20) NOT NULL, 
+  value NUMERIC NOT NULL,
+  unit VARCHAR(20),
+  points INTEGER DEFAULT 0,
+  logged_at TIMESTAMP DEFAULT NOW() 
+);
