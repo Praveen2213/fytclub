@@ -8,12 +8,14 @@ const usersProfileRoutes = require('./routes/users');
 const activitiesRoutes = require('./routes/activities');
 const authMiddleware = require('./middleware');
 const usersImageUploadRoutes = require('./routes/users');
+const battleRoutes = require('./routes/battles');
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersProfileRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/users', usersImageUploadRoutes);
+app.use('/api/battles', battleRoutes);
 
 app.get('/', async (req, res)=> {
     const result = await pool.query('SELECT NOW()');

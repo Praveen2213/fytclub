@@ -1,0 +1,55 @@
+const express = require('express');
+const router = express.Router();
+const pool = require('../db');
+const authMiddleware = require('../middleware');
+const crypto = require('crypto');
+
+router.post('/', authMiddleware, async(req, res) =>{
+    const invite_token = crypto.randomBytes(16).toString('hex');
+    const { opponent_id, activity_types, challenger_dare} = req.body;
+    const challenger_id = req.userId;
+    
+    const result = await pool.query(
+        'INSERT INTO battles (challenger_id, opponent_id, activity_types, challenger_dare, invite_token) VALUES ($1, $2, $3, $4, $5) RETURNING id, challenger_id, opponent_id, activity_types, challenger_dare, invite_token, status, created_at',[challenger_id, opponent_id, activity_types, challenger_dare, invite_token]
+    );
+
+    res.status(201).json(result.rows[0]);
+    
+}); 
+
+router.get('/accept/:token', async(req, res) => {
+    const token = req.params.token;
+
+    const result = await pool.query(
+        'SELECT * FROM battles WHERE invite_token = $1', [token]
+    );
+
+    if(result.rows.length === 0){
+        return res.status(404).json({message : 'battle not found'});
+    }
+
+    res.status(201).json(result.rows[0]);
+});
+
+router.patch('/:id/accept', authMiddleware, async(req, res)=>{
+    const battle_id = req.params.id;
+    const opponent_dare = req.body.opponent_dare;
+
+    const result = await pool.query(
+        "UPDATE battles SET status = $1, opponent_dare = $2, start_date = NOW(), end_date = NOW() + INTERVAL '7 days' WHERE id = $3 RETURNING *", ['active', opponent_dare, battle_id]
+    );
+
+    res.status(200).json(result.rows[0]);
+});
+
+router.patch('/:id/decline', authMiddleware, async(req, res)=>{
+    const battle_id = req.params.id;
+    const result = await pool.query(
+        "UPDATE battles SET status = $1 WHERE id = $2 RETURNING *", ['decline', battle_id]
+    );
+
+    res.status(200).json(result.rows[0]);
+});
+
+module.exports = router;
+

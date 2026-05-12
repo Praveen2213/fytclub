@@ -19,3 +19,18 @@ CREATE TABLE activities(
   points INTEGER DEFAULT 0,
   logged_at TIMESTAMP DEFAULT NOW() 
 );
+
+CREATE TABLE battles (
+  id SERIAL PRIMARY KEY,
+  challenger_id INTEGER REFERENCES users(id),
+  opponent_id INTEGER REFERENCES users(id),
+  status VARCHAR(20) DEFAULT 'pending',
+  activity_types TEXT[],
+  start_date TIMESTAMP,
+  end_date TIMESTAMP,
+  challenger_dare TEXT,
+  opponent_dare TEXT,
+  winner_id INTEGER REFERENCES users(id),
+  invite_token VARCHAR,
+  created_at TIMESTAMP DEFAULT NOW() 
+);
