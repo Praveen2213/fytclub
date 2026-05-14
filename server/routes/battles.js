@@ -39,6 +39,10 @@ router.patch('/:id/accept', authMiddleware, async(req, res)=>{
         "UPDATE battles SET status = $1, opponent_dare = $2, start_date = NOW(), end_date = NOW() + INTERVAL '7 days' WHERE id = $3 RETURNING *", ['active', opponent_dare, battle_id]
     );
 
+    await pool.query(
+        "INSERT INTO battle_scores (battle_id, user_id, score) VALUES ($1, $2, 0), ($1, $3, 0)", [battle_id, result.rows[0].challenger_id, result.rows[0].opponent_id]
+    );
+
     res.status(200).json(result.rows[0]);
 });
 

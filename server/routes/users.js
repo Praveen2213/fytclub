@@ -16,6 +16,15 @@ router.patch('/:id/avatar', authMiddleware, upload.single('avatar'),async(req, r
     res.status(200).json(result.rows[0]);
 });
 
+//leaderboard api
+router.get('/leaderboard', async(req, res)=>{
+    const result = await pool.query(
+        "SELECT users.username, users.total_wins, users.total_losses, SUM(battle_scores.score) as total_points FROM users LEFT JOIN battle_scores ON users.id = battle_scores.user_id GROUP BY users.id ORDER BY total_points DESC"
+    );
+    res.status(200).json(result.rows);
+    
+});
+
 //prfile api
 router.get('/:id', async (req, res) =>{
     const id = req.params.id;
@@ -25,7 +34,7 @@ router.get('/:id', async (req, res) =>{
     );
     
     if(result.rows.length === 0){
-        res.status(404).json({message : 'User not found'});
+        return res.status(404).json({message : 'User not found'});
     }
 
     res.json(result.rows[0]);

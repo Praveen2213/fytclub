@@ -83,6 +83,11 @@ router.post("/", authMiddleware, async (req, res) => {
     "INSERT INTO battle_events (battle_id, user_id, activity_types, points_earned, message) VALUES ($1, $2, $3, $4, $5)", [battle.rows[0].id, user_id, type, points, msg]
   );
 
+  //updating battle score
+  await pool.query(
+    "UPDATE battle_scores SET score = score + $1, last_updated = NOW() WHERE battle_id = $2 AND user_id = $3", [points, battle.rows[0].id, user_id]
+  );
+
   io.to(`battle_${battle.rows[0].id}`).emit('score_update', result.rows[0]);
 
   res.status(200).json(result.rows[0]);
