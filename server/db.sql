@@ -34,3 +34,21 @@ CREATE TABLE battles (
   invite_token VARCHAR,
   created_at TIMESTAMP DEFAULT NOW() 
 );
+
+CREATE TABLE battle_scores (
+  id SERIAL PRIMARY KEY,
+  battle_id INTEGER REFERENCES battles(id),
+  user_id INTEGER REFERENCES users(id),
+  score INTEGER DEFAULT 0,
+  last_updated TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE battle_events(
+  id SERIAL PRIMARY KEY,
+  battle_id INTEGER REFERENCES battles(id),
+  user_id INTEGER REFERENCES users(id),
+  message TEXT,
+  activity_types VARCHAR(20),
+  points_earned INTEGER,
+  created_at TIMESTAMP DEFAULT NOW()
+);
