@@ -1,3 +1,4 @@
+const { generateInsight } = require('../ai');
 const express = require("express");
 const router = express.Router();
 const pool = require("../db");
@@ -89,6 +90,24 @@ router.post("/", authMiddleware, async (req, res) => {
   );
 
   io.to(`battle_${battle.rows[0].id}`).emit('score_update', result.rows[0]);
+
+  const opponent_id = battle.rows[0].challenger_id === user_id 
+                      ? battle.rows[0].opponent_id 
+                      : battle.rows[0].challenger_id;
+
+  //prompt for ai
+  const prompt = `You are a witty fitness battle analyst.
+                  Player ${username} just logged ${value} ${unit} of ${type} and earned ${points} points.
+                  Write ONE funny trash talk line (max 15 words) to send to their opponent. Be savage but friendly.`;
+  
+  //ai generated response using prompt
+  const response = await generateInsight(prompt); 
+
+  const insights = await pool.query(
+    "INSERT INTO ai_insights (battle_id, user_id, content, insight_type) VALUES ($1, $2, $3, $4)", [battle.rows[0].id, opponent_id, response, 'taunt']
+  );
+
+  io.to(`battle_${battle.rows[0].id}`).emit('ai_taunt', response);
 
   res.status(200).json(result.rows[0]);
 });

@@ -52,3 +52,20 @@ CREATE TABLE battle_events(
   points_earned INTEGER,
   created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE ai_insights (
+  id SERIAL PRIMARY KEY,
+  battle_id INTEGER REFERENCES battles(id),
+  user_id INTEGER REFERENCES users(id),
+  content TEXT,
+  generated_at TIMESTAMP DEFAULT NOW(),
+  insight_type VARCHAR(20)
+);
+
+CREATE TABLE moods (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  score INTEGER,
+  note TEXT,
+  logged_at TIMESTAMP DEFAULT NOW()
+);
