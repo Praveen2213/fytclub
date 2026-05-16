@@ -25,6 +25,16 @@ router.get('/leaderboard', async(req, res)=>{
     
 });
 
+//search api
+router.get('/search', authMiddleware, async(req, res) => {
+    const search = req.query.q;
+    const result = await pool.query(
+        "SELECT id, username, avatar_url FROM users WHERE username ILIKE $1",
+        [`%${search}%`]
+    );
+    res.status(200).json(result.rows);
+});
+
 //prfile api
 router.get('/:id', async (req, res) =>{
     const id = req.params.id;
