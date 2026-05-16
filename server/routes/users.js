@@ -19,7 +19,7 @@ router.patch('/:id/avatar', authMiddleware, upload.single('avatar'),async(req, r
 //leaderboard api
 router.get('/leaderboard', async(req, res)=>{
     const result = await pool.query(
-        "SELECT users.username, users.total_wins, users.total_losses, SUM(battle_scores.score) as total_points FROM users LEFT JOIN battle_scores ON users.id = battle_scores.user_id GROUP BY users.id ORDER BY total_points DESC"
+        "SELECT users.username, users.total_wins, users.total_losses, COALESCE(SUM(battle_scores.score), 0) as total_points FROM users LEFT JOIN battle_scores ON users.id = battle_scores.user_id GROUP BY users.id ORDER BY total_points DESC"
     );
     res.status(200).json(result.rows);
     

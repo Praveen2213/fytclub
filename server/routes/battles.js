@@ -55,5 +55,14 @@ router.patch('/:id/decline', authMiddleware, async(req, res)=>{
     res.status(200).json(result.rows[0]);
 });
 
+router.get('/history/:userId', authMiddleware, async(req, res)=>{
+    const user = req.params.userId;
+    const result = await pool.query(
+        "SELECT b.challenger_id, b.opponent_id, o.username as opponent_name, b.start_date, b.end_date, b.status, b.winner_id FROM battles b LEFT JOIN users c ON b.challenger_id = c.id LEFT JOIN users o ON b.opponent_id = o.id WHERE (b.challenger_id = $1 OR b.opponent_id = $1)", [user]
+    );
+
+    res.status(200).json(result.rows);
+});
+
 module.exports = router;
 
