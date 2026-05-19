@@ -3,8 +3,15 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
+const { validateRegister, validateLogin } = require('../validator');
 
-router.post('/register', async(req, res) => {
+router.post('/register', validateRegister, async(req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
+
     const {username, email, password} = req.body;
     const hashedPassword = await bcrypt.hash(password,10);
     
@@ -14,7 +21,11 @@ router.post('/register', async(req, res) => {
     res.status(201).json(result.rows[0]);
 });
 
-router.post('/login', async(req, res) => {
+router.post('/login', validateLogin, async(req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
     const {email, password} = req.body;
 
     const result = await pool.query(

@@ -3,11 +3,27 @@ const router = express.Router();
 const pool = require('../db');
 const authMiddleware = require('../middleware');
 const crypto = require('crypto');
+const { validateBattle, validateAccept } = require('../validator');
+const { validationResult } = require('express-validator')
 
-router.post('/', authMiddleware, async(req, res) =>{
+router.post('/', authMiddleware, validateBattle, async(req, res) =>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
+
     const invite_token = crypto.randomBytes(16).toString('hex');
     const { opponent_id, activity_types, challenger_dare} = req.body;
     const challenger_id = req.userId;
+
+    //checking if opponent exist or not
+    const opponent = await pool.query(
+        "SELECT id FROM users WHERE id = $1", [opponent_id]
+    );
+
+    if(opponent.rows.length === 0){
+        return res.status(400).json({message: "opponent not found"});
+    }
     
     const result = await pool.query(
         'INSERT INTO battles (challenger_id, opponent_id, activity_types, challenger_dare, invite_token) VALUES ($1, $2, $3, $4, $5) RETURNING id, challenger_id, opponent_id, activity_types, challenger_dare, invite_token, status, created_at',[challenger_id, opponent_id, activity_types, challenger_dare, invite_token]
@@ -31,7 +47,11 @@ router.get('/accept/:token', async(req, res) => {
     res.status(201).json(result.rows[0]);
 });
 
-router.patch('/:id/accept', authMiddleware, async(req, res)=>{
+router.patch('/:id/accept', authMiddleware, validateAccept, async(req, res)=>{
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
     const battle_id = req.params.id;
     const opponent_dare = req.body.opponent_dare;
 

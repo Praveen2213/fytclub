@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 const authMiddleware = require("../middleware");
+const { validateActivity } = require("../validator");
+const { validationResult } = require('express-validator');
 module.exports = (io) => {
 
 function calculatePoints(type, value) {
@@ -49,7 +51,11 @@ function generateMessage(type, value, points, username, unit){
   return `${username} logged a ${type} of ${value} ${unit}, ${points} points`;
 };
 
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, validateActivity, async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    return res.status(400).json({errors: errors.array()}); 
+  }
   const { type, value, unit } = req.body;
   const user_id = req.userId;
 

@@ -28,6 +28,9 @@ router.get('/leaderboard', async(req, res)=>{
 //search api
 router.get('/search', authMiddleware, async(req, res) => {
     const search = req.query.q;
+    if(!search) {
+        return res.status(400).json({ message: 'Search query required' });
+    }
     const result = await pool.query(
         "SELECT id, username, avatar_url FROM users WHERE username ILIKE $1",
         [`%${search}%`]
