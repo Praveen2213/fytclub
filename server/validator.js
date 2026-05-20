@@ -12,9 +12,9 @@ const validateLogin = [
 ];
 
 const validateActivity = [
-  body('type').notEmpty().withMessage('Activity type required'),
-  body('value').notEmpty().isNumeric().isFloat({min: 0}).withMessage('Value must be a positive number'),
-  body('unit').notEmpty().withMessage('Unit required')
+  body('type').notEmpty().isLength({max: 50}).withMessage('Activity type required'),
+  body('value').notEmpty().isNumeric().isFloat({min: 0, max: 100000}).withMessage('Value must be a positive number'),
+  body('unit').notEmpty().isLength({max: 20}).withMessage('Unit required')
 ];
 
 const validateBattle = [

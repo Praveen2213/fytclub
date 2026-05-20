@@ -3,10 +3,11 @@ const router = express.Router();
 const pool = require('../db');
 const authMiddleware = require('../middleware');
 const crypto = require('crypto');
+const wrapAsync = require('../utils/wrapAsync');
 const { validateBattle, validateAccept } = require('../validator');
-const { validationResult } = require('express-validator')
+const { validationResult } = require('express-validator');
 
-router.post('/', authMiddleware, validateBattle, async(req, res) =>{
+router.post('/', authMiddleware, validateBattle, wrapAsync(async(req, res) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
@@ -31,9 +32,9 @@ router.post('/', authMiddleware, validateBattle, async(req, res) =>{
 
     res.status(201).json(result.rows[0]);
     
-}); 
+})); 
 
-router.get('/accept/:token', async(req, res) => {
+router.get('/accept/:token', wrapAsync(async(req, res) => {
     const token = req.params.token;
 
     const result = await pool.query(
@@ -45,9 +46,9 @@ router.get('/accept/:token', async(req, res) => {
     }
 
     res.status(201).json(result.rows[0]);
-});
+}));
 
-router.patch('/:id/accept', authMiddleware, validateAccept, async(req, res)=>{
+router.patch('/:id/accept', authMiddleware, validateAccept, wrapAsync(async(req, res)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
@@ -64,25 +65,25 @@ router.patch('/:id/accept', authMiddleware, validateAccept, async(req, res)=>{
     );
 
     res.status(200).json(result.rows[0]);
-});
+}));
 
-router.patch('/:id/decline', authMiddleware, async(req, res)=>{
+router.patch('/:id/decline', authMiddleware, wrapAsync(async(req, res)=>{
     const battle_id = req.params.id;
     const result = await pool.query(
         "UPDATE battles SET status = $1 WHERE id = $2 RETURNING *", ['decline', battle_id]
     );
 
     res.status(200).json(result.rows[0]);
-});
+}));
 
-router.get('/history/:userId', authMiddleware, async(req, res)=>{
+router.get('/history/:userId', authMiddleware, wrapAsync(async(req, res)=>{
     const user = req.params.userId;
     const result = await pool.query(
         "SELECT b.challenger_id, b.opponent_id, o.username as opponent_name, b.start_date, b.end_date, b.status, b.winner_id FROM battles b LEFT JOIN users c ON b.challenger_id = c.id LEFT JOIN users o ON b.opponent_id = o.id WHERE (b.challenger_id = $1 OR b.opponent_id = $1)", [user]
     );
 
     res.status(200).json(result.rows);
-});
+}));
 
 module.exports = router;
 

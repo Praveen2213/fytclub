@@ -39,6 +39,15 @@ app.use('/api/activities', activitiesRoutes);
 app.use('/api/users', usersImageUploadRoutes);
 app.use('/api/battles', battleRoutes);
 
+//global error handler
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    if(err.code === '23505') { //duplicate key error
+        return res.status(400).json({ message: 'Email or username already exists' });
+    }
+    res.status(err.status || 500).json({ message: err.message || 'Something went wrong' });
+});
+
 server.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });

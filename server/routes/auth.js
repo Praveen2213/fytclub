@@ -3,10 +3,11 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
+const wrapAsync = require('../utils/wrapAsync');
 const { validationResult } = require('express-validator');
 const { validateRegister, validateLogin } = require('../validator');
 
-router.post('/register', validateRegister, async(req, res) => {
+router.post('/register', validateRegister, wrapAsync(async(req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
@@ -19,9 +20,9 @@ router.post('/register', validateRegister, async(req, res) => {
         'INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id, username, email',  [username, email, hashedPassword]
     );
     res.status(201).json(result.rows[0]);
-});
+}));
 
-router.post('/login', validateLogin, async(req, res) => {
+router.post('/login', validateLogin, wrapAsync(async(req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
@@ -50,6 +51,6 @@ router.post('/login', validateLogin, async(req, res) => {
     );
 
     res.status(200).json({token});
-});
+}));
 
 module.exports = router;
