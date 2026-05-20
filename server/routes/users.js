@@ -7,6 +7,10 @@ const wrapAsync = require('../utils/wrapAsync');
 
 //profile image/avatar upload route
 router.patch('/:id/avatar', authMiddleware, upload.single('avatar'), wrapAsync(async(req, res)=>{
+    if(parseInt(req.params.id) !== parseInt(req.userId)){
+        return res.status(403).json({message: "Unauthorized"});
+    }
+
     const avatarURL = req.file.path;
     const userId = req.params.id;
 
