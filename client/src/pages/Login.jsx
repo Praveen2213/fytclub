@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import AuthInput from "../components/auth/AuthInput";
 import AuthButton from "../components/auth/AuthButton";
 import {loginUser} from "../services/authService"
+import { useNavigate } from "react-router-dom";
 function Login(){
     const[email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
     async function handleLogin(e){
         e.preventDefault();
         setError("");
@@ -22,7 +24,7 @@ function Login(){
                 password,
             });
             console.log(data);
-            alert("Login successful!");
+           navigate("/dashboard");
         }catch(error){
             setError(
          error.response?.data?.message ||
