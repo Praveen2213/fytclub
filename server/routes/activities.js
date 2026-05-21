@@ -4,6 +4,7 @@ const router = express.Router();
 const pool = require("../db");
 const authMiddleware = require("../middleware");
 const wrapAsync = require('../utils/wrapAsync');
+const {activityLimit} = require('../limiter');
 const { validateActivity } = require("../validator");
 const { validationResult } = require('express-validator');
 module.exports = (io) => {
@@ -52,7 +53,7 @@ function generateMessage(type, value, points, username, unit){
   return `${username} logged a ${type} of ${value} ${unit}, ${points} points`;
 };
 
-router.post("/", authMiddleware, validateActivity, wrapAsync(async (req, res) => {
+router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(async (req, res) => {
   const errors = validationResult(req);
   if(!errors.isEmpty()){
     return res.status(400).json({errors: errors.array()}); 

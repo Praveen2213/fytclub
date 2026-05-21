@@ -4,9 +4,10 @@ const pool = require('../db');
 const {upload} = require('../cloudinary');
 const authMiddleware = require('../middleware');
 const wrapAsync = require('../utils/wrapAsync');
+const { strictLimit } = require('../limiter');
 
 //profile image/avatar upload route
-router.patch('/:id/avatar', authMiddleware, upload.single('avatar'), wrapAsync(async(req, res)=>{
+router.patch('/:id/avatar', authMiddleware, strictLimit, upload.single('avatar'), wrapAsync(async(req, res)=>{
     if(parseInt(req.params.id) !== parseInt(req.userId)){
         return res.status(403).json({message: "Unauthorized"});
     }

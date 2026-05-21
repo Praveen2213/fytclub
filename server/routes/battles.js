@@ -4,10 +4,11 @@ const pool = require('../db');
 const authMiddleware = require('../middleware');
 const crypto = require('crypto');
 const wrapAsync = require('../utils/wrapAsync');
+const {strictLimit} = require('../limiter');
 const { validateBattle, validateAccept } = require('../validator');
 const { validationResult } = require('express-validator');
 
-router.post('/', authMiddleware, validateBattle, wrapAsync(async(req, res) =>{
+router.post('/', authMiddleware, strictLimit, validateBattle, wrapAsync(async(req, res) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
@@ -86,7 +87,7 @@ router.patch('/:id/accept', authMiddleware, validateAccept, wrapAsync(async(req,
         );
         return res.status(403).json({message: `Only ${name.rows[0].username} can accept this battle`})
     }
-    
+
     if(battle.rows[0].status !== 'pending'){
         return res.status(400).json({ message: 'Battle already accepted or completed' });
     }

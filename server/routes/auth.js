@@ -4,10 +4,11 @@ const bcrypt = require('bcryptjs');
 const pool = require('../db');
 const jwt = require('jsonwebtoken');
 const wrapAsync = require('../utils/wrapAsync');
+const {strictLimit} = require('../limiter');
 const { validationResult } = require('express-validator');
 const { validateRegister, validateLogin } = require('../validator');
 
-router.post('/register', validateRegister, wrapAsync(async(req, res) => {
+router.post('/register', strictLimit, validateRegister, wrapAsync(async(req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
@@ -22,7 +23,7 @@ router.post('/register', validateRegister, wrapAsync(async(req, res) => {
     res.status(201).json(result.rows[0]);
 }));
 
-router.post('/login', validateLogin, wrapAsync(async(req, res) => {
+router.post('/login', strictLimit, validateLogin, wrapAsync(async(req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()});
