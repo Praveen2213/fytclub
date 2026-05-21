@@ -30,6 +30,17 @@ router.post('/', authMiddleware, validateBattle, wrapAsync(async(req, res) =>{
     if(opponent.rows.length === 0){
         return res.status(400).json({message: "opponent not found"});
     }
+    //one user -> one battle 
+    const activeBattle = await pool.query(
+    `SELECT id FROM battles 
+     WHERE (challenger_id = $1 OR opponent_id = $1) 
+     AND status IN ('pending', 'active')`,
+     [req.userId]
+    );
+
+    if(activeBattle.rows.length > 0){
+        return res.status(400).json({ message: 'You already have an active battle' });
+    }
     
     const result = await pool.query(
         'INSERT INTO battles (challenger_id, opponent_id, activity_types, challenger_dare, invite_token) VALUES ($1, $2, $3, $4, $5) RETURNING id, challenger_id, opponent_id, activity_types, challenger_dare, invite_token, status, created_at',[challenger_id, opponent_id, activity_types, challenger_dare, invite_token]
@@ -74,6 +85,10 @@ router.patch('/:id/accept', authMiddleware, validateAccept, wrapAsync(async(req,
             "SELECT username FROM users WHERE id = $1", [battle.rows[0].opponent_id]
         );
         return res.status(403).json({message: `Only ${name.rows[0].username} can accept this battle`})
+    }
+    
+    if(battle.rows[0].status !== 'pending'){
+        return res.status(400).json({ message: 'Battle already accepted or completed' });
     }
 
     const result = await pool.query(
