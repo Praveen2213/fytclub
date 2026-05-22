@@ -24,6 +24,10 @@ function Login(){
                 password,
             });
             console.log(data);
+            localStorage.setItem(
+            "token",
+            data.token
+          );
            navigate("/dashboard");
         }catch(error){
             setError(
