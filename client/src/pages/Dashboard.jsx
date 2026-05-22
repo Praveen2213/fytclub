@@ -1,159 +1,329 @@
+import { useEffect, useState } from "react";
+import ActiveBattleCard from "../components/dashboard/ActiveBattleCard";
+import MainLayout from "../layouts/MainLayout";
 import StatCard from "../components/dashboard/StatCard";
 import QuickActions from "../components/dashboard/QuickActions";
-import ActivityForm from "../components/dashboard/ActivityForm";
 import ActivityCard from "../components/dashboard/ActivityCard";
-import MainLayout from "../layouts/MainLayout";
-function Dashboard(){
-    // TEMP MOCK USER
-  // Later this will come from backend
-  const user = {
-    username: "Roshni",
-  };
- return (
+import { getActivities } from "../services/activityService";
+import { getDashboardStats } from "../services/dashboardService";
+
+function Dashboard() {
+
+  // ======================
+  // STATES
+  // ======================
+
+  const [activities, setActivities] =
+    useState([]);
+
+  const [stats, setStats] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+
+
+  // ======================
+  // FETCH DATA
+  // ======================
+
+  useEffect(() => {
+
+    async function fetchDashboardData() {
+
+      try {
+
+        // FETCH ACTIVITIES
+
+        const activitiesData =
+          await getActivities();
+
+        setActivities(
+          activitiesData
+        );
+
+
+
+        // FETCH STATS
+
+        const statsData =
+          await getDashboardStats();
+
+        setStats(statsData);
+
+      } catch (error) {
+
+        console.log(error);
+
+      } finally {
+
+        setLoading(false);
+      }
+    }
+
+
+
+    fetchDashboardData();
+
+  }, []);
+
+
+
+  // ======================
+  // LOADING UI
+  // ======================
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center text-2xl font-semibold">
+
+        Loading Dashboard...
+
+      </div>
+    );
+  }
+
+
+
+  return (
+
     <MainLayout>
 
       <div className="p-4 sm:p-6 text-white">
 
-        {/* HEADER */}
+        {/* ======================
+            HEADER
+        ====================== */}
 
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
 
           <div>
 
             <h1 className="text-3xl sm:text-4xl font-bold">
-              Welcome back, {user.username} 👋
+
+              Welcome back,
+              {" "}
+              {stats?.username}
+              {" "}
+              👋
+
             </h1>
 
             <p className="text-slate-400 mt-2 text-sm sm:text-base">
-              Track your fitness journey and stay ahead in battles.
+
+              Track your fitness journey
+              and improve every day.
+
             </p>
 
           </div>
 
-          {/* <button className="bg-blue-500 hover:bg-blue-600 px-5 py-3 rounded-xl font-semibold transition-all duration-300 w-full sm:w-fit">
-
-            + Log Activity
-
-          </button> */}
-
         </div>
+      {/* ======================
+    ACTIVE BATTLES
+====================== */}
 
-        {/* STATS */}
+<div className="mt-8">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+  <div className="flex items-center justify-between mb-5">
+
+    <h2 className="text-2xl font-bold">
+
+      Active Battles
+
+    </h2>
+
+    <button className="text-blue-400 hover:text-blue-300 text-sm">
+
+      See All
+
+    </button>
+
+  </div>
+
+
+
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+    <ActiveBattleCard
+      opponent="Praveen"
+      yourPoints={520}
+      opponentPoints={470}
+      daysLeft={2}
+    />
+
+    <ActiveBattleCard
+      opponent="Rahul"
+      yourPoints={300}
+      opponentPoints={420}
+      daysLeft={5}
+    />
+
+  </div>
+
+</div>
+
+{/* ======================
+    QUICK STATS
+====================== */}
+
+<div className="mt-10 mb-5">
+
+  <h2 className="text-2xl font-bold">
+
+    Quick Stats
+
+  </h2>
+
+</div>
+        {/* ======================
+            STAT CARDS
+        ====================== */}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
 
           <StatCard
             title="Total Activities"
-            value="24"
-            description="+5 this week"
+            value={stats?.totalActivities}
+            description="Activities completed"
             icon="🏋️"
           />
 
           <StatCard
-            title="Calories Burned"
-            value="3,240"
-            description="+420 today"
+            title="Total Points"
+            value={stats?.totalPoints}
+            description="Fitness points earned"
             icon="🔥"
           />
 
           <StatCard
             title="Current Streak"
-            value="7 Days"
-            description="Personal best!"
+            value={`${stats?.streak} Days`}
+            description="Stay consistent"
             icon="⚡"
           />
 
           <StatCard
-            title="Workout Hours"
-            value="18 hrs"
-            description="2 hrs today"
-            icon="⏱️"
+            title="Run Distance"
+            value={`${stats?.totalRunDistance} km`}
+            description="Total running"
+            icon="🏃"
           />
 
           <StatCard
             title="Total Wins"
-            value="12"
-            description="Won this month"
+            value={stats?.totalWins}
+            description="Battles won"
             icon="🏆"
           />
 
           <StatCard
             title="Total Losses"
-            value="3"
+            value={stats?.totalLosses}
             description="Keep improving"
             icon="📉"
           />
 
           <StatCard
             title="Active Battles"
-            value="4"
-            description="2 ending soon"
+            value={stats?.activeBattles}
+            description="Challenges ongoing"
             icon="🥊"
           />
 
           <StatCard
-            title="Leaderboard Rank"
-            value="#8"
-            description="Top 10 this week"
-            icon="📊"
+            title="Calories Burned"
+            value={stats?.calories}
+            description="Estimated burn"
+            icon="🔥"
           />
 
         </div>
-        <ActivityForm />
-        {/* RECENT ACTIVITIES */}
+
+        {/* ======================
+            RECENT ACTIVITIES
+        ====================== */}
 
         <div className="mt-12">
 
           <div className="flex items-center justify-between mb-5">
 
             <h2 className="text-2xl font-bold">
+
               Recent Activities
+
             </h2>
 
             <button className="text-blue-400 hover:text-blue-300 text-sm">
+
               View All
+
             </button>
 
           </div>
 
-          <div className="flex flex-col gap-4">
 
-            <ActivityCard
-              type="run"
-              value="5"
-              unit="km"
-              points="250"
-              loggedAt="2 hours ago"
-            />
 
-            <ActivityCard
-              type="gym"
-              value="1"
-              unit="session"
-              points="100"
-              loggedAt="Today"
-            />
+          {/* EMPTY STATE */}
 
-            <ActivityCard
-              type="steps"
-              value="8000"
-              unit="steps"
-              points="160"
-              loggedAt="Yesterday"
-            />
+          {
+            activities.length === 0 ? (
 
-          </div>
+              <div className="bg-slate-800 rounded-2xl p-6 text-slate-400 text-center">
+
+                No activities logged yet
+
+              </div>
+
+            ) : (
+
+              <div className="flex flex-col gap-4">
+
+                {
+                  activities.slice(0,3).map(
+                    (activity) => (
+
+                      <ActivityCard
+                        key={activity.id}
+                        type={activity.type}
+                        value={activity.value}
+                        unit={activity.unit}
+                        points={activity.points}
+                        loggedAt={
+                          activity.logged_at
+                        }
+                      />
+                    )
+                  )
+                }
+
+              </div>
+            )
+          }
 
         </div>
 
-        {/* QUICK ACTIONS */}
 
-        <QuickActions />
+
+        {/* ======================
+            QUICK ACTIONS
+        ====================== */}
+
+        <div className="mt-12">
+
+          <QuickActions />
+
+        </div>
 
       </div>
 
     </MainLayout>
   );
 }
+
+
 
 export default Dashboard;

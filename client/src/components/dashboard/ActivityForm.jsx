@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createActivity } from "../../services/activityService";
-function ActivityForm(){
+function ActivityForm({ onActivityAdded=null }){
   const [type, setType] = useState("run");
 
   const [value, setValue] = useState("");
@@ -36,6 +36,9 @@ function ActivityForm(){
       });
 
       console.log(data);
+      if(onActivityAdded){
+      onActivityAdded(data);
+      }
 
       setSuccess("Activity logged successfully!");
 

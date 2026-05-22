@@ -13,3 +13,14 @@ export async function createActivity(data){
     );
     return response.data;
 }
+export async function getActivities(){
+    const token=localStorage.getItem("token");
+    const response = await API.get("/activities",
+        {
+            headers:{
+                Authorization:`Bearer ${token}`,
+            },
+        }
+    );
+    return response.data;
+}
