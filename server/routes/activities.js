@@ -58,7 +58,7 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
   if(!errors.isEmpty()){
     return res.status(400).json({errors: errors.array()}); 
   }
-  const { type, value, unit } = req.body;
+  const { type, value, unit, battle_id } = req.body;
   const user_id = req.userId;
 
   const points = calculatePoints(type, value);
@@ -70,11 +70,31 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
   );
 
   //battle dhundho
-  const battle = await pool.query(
-    "SELECT * FROM battles WHERE (challenger_id = $1 OR opponent_id = $1) AND status = 'active' ", [user_id]
-  );
+  let battles;
 
-  if(!battle.rows[0]){
+  if(battle_id) {
+  // Mode 1 — specific battle
+  const battleResult = await pool.query(
+    `SELECT * FROM battles 
+     WHERE id = $1 
+     AND (challenger_id = $2 OR opponent_id = $2) 
+     AND status = 'active'`,
+    [battle_id, user_id]
+  );
+  battles = battleResult.rows;
+  } else {
+  // Mode 2 — quick log — us type ki saari active battles
+  const battleResult = await pool.query(
+    `SELECT * FROM battles 
+     WHERE (challenger_id = $1 OR opponent_id = $1) 
+     AND status = 'active'
+     AND $2 = ANY(activity_types)`,
+    [user_id, type]
+  );
+  battles = battleResult.rows;
+}
+
+  if(battles.length === 0){
     return res.status(200).json(result.rows[0]);
   }
 
@@ -85,23 +105,28 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
 
   const username = user.rows[0].username;
 
+for(const battle of battles){
   const msg = generateMessage(type, value, points, username, unit);
 
   //battle event db me save kro
   const event_save = await pool.query(
-    "INSERT INTO battle_events (battle_id, user_id, activity_types, points_earned, message) VALUES ($1, $2, $3, $4, $5)", [battle.rows[0].id, user_id, type, points, msg]
+    "INSERT INTO battle_events (battle_id, user_id, activity_types, points_earned, message) VALUES ($1, $2, $3, $4, $5)", [battle.id, user_id, type, points, msg]
   );
 
   //updating battle score
   await pool.query(
-    "UPDATE battle_scores SET score = score + $1, last_updated = NOW() WHERE battle_id = $2 AND user_id = $3", [points, battle.rows[0].id, user_id]
+    "UPDATE battle_scores SET score = score + $1, last_updated = NOW() WHERE battle_id = $2 AND user_id = $3", [points, battle.id, user_id]
   );
 
-  io.to(`battle_${battle.rows[0].id}`).emit('score_update', result.rows[0]);
+  io.to(`battle_${battle.id}`).emit('score_update', {
+    userId: user_id,
+    points: points,
+    battleId: battle.id
+  });
 
-  const opponent_id = battle.rows[0].challenger_id === user_id 
-                      ? battle.rows[0].opponent_id 
-                      : battle.rows[0].challenger_id;
+  const opponent_id = battle.challenger_id === user_id 
+                      ? battle.opponent_id 
+                      : battle.challenger_id;
 
   //prompt for ai
   const prompt = `You are a witty fitness battle analyst.
@@ -112,14 +137,30 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
   const response = await generateInsight(prompt); 
 
   const insights = await pool.query(
-    "INSERT INTO ai_insights (battle_id, user_id, content, insight_type) VALUES ($1, $2, $3, $4)", [battle.rows[0].id, opponent_id, response, 'taunt']
+    "INSERT INTO ai_insights (battle_id, user_id, content, insight_type) VALUES ($1, $2, $3, $4)", [battle.id, opponent_id, response, 'taunt']
   );
 
-  io.to(`battle_${battle.rows[0].id}`).emit('ai_taunt', response);
-
+  io.to(`battle_${battle.id}`).emit('ai_taunt', {
+    battleId: battle.id,
+    message: response
+  });
+}
   res.status(200).json(result.rows[0]);
 }));
 
+router.get("/", authMiddleware, wrapAsync(async (req, res) => {
+    const user_id = req.userId;
+    const activities = await pool.query(
+      `SELECT *
+       FROM activities
+       WHERE user_id = $1
+       ORDER BY logged_at DESC`,
+      [user_id]
+    );
+
+    res.json(activities.rows);
+  })
+);
 
   return router;
 };
