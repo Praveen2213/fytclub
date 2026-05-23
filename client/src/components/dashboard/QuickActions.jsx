@@ -1,60 +1,109 @@
+import { useNavigate } from "react-router-dom";
+
+
+
 function QuickActions() {
+
+  const navigate = useNavigate();
+
+
+
+  const actions = [
+
+    {
+      title: "Log Activity",
+      icon: "➕",
+      description:
+        "Track your workout",
+      path: "/log-activity",
+    },
+
+    {
+      title: "Start Battle",
+      icon: "🥊",
+      description:
+        "Challenge friends",
+      path: "/battles",
+    },
+
+    {
+      title: "History",
+      icon: "📜",
+      description:
+        "View past activities",
+      path: "/history",
+    },
+
+    {
+      title: "Leaderboard",
+      icon: "🏆",
+      description:
+        "See top rankings",
+      path: "/leaderboard",
+    },
+  ];
+
+
+
   return (
 
-    <div className="mt-12">
+    <div>
 
-      <h2 className="text-2xl font-bold text-white mb-5">
+      <h2 className="text-2xl font-bold mb-5">
+
         Quick Actions
+
       </h2>
 
-      <div className="grid  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
-        {/* ADD ACTIVITY */}
 
-        <button className="bg-slate-800 p-6 rounded-2xl hover:bg-slate-700 transition-all duration-300 text-left shadow-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
-          <h3 className="text-xl font-semibold text-white mb-2">
-            ➕ Add Activity
-          </h3>
+        {
+          actions.map((action) => (
 
-          <p className="text-slate-400">
-            Log your workout and earn points.
-          </p>
+            <button
+              key={action.title}
 
-        </button>
+              onClick={() =>
+                navigate(action.path)
+              }
 
-        {/* JOIN BATTLE */}
+              className="bg-slate-800 hover:bg-slate-700 transition-all duration-300 rounded-2xl p-5 text-left shadow-lg border border-slate-700 hover:border-blue-500"
+            >
 
-        <button className="bg-slate-800 p-6 rounded-2xl hover:bg-slate-700 transition-all duration-300 text-left shadow-lg">
+              <div className="text-4xl mb-4">
 
-          <h3 className="text-xl font-semibold text-white mb-2">
-            🥊 Join Battle
-          </h3>
+                {action.icon}
 
-          <p className="text-slate-400">
-            Compete with friends and climb rankings.
-          </p>
+              </div>
 
-        </button>
 
-        {/* UPDATE PROFILE */}
 
-        <button className="bg-slate-800 p-6 rounded-2xl hover:bg-slate-700 transition-all duration-300 text-left shadow-lg">
+              <h3 className="text-lg font-semibold">
 
-          <h3 className="text-xl font-semibold text-white mb-2">
-            👤 Update Profile
-          </h3>
+                {action.title}
 
-          <p className="text-slate-400">
-            Customize your fitness profile settings.
-          </p>
+              </h3>
 
-        </button>
+
+
+              <p className="text-slate-400 text-sm mt-2">
+
+                {action.description}
+
+              </p>
+
+            </button>
+          ))
+        }
 
       </div>
 
     </div>
   );
 }
+
+
 
 export default QuickActions;
