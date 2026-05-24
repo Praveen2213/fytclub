@@ -1,0 +1,201 @@
+import axios from "axios";
+
+
+
+const API = axios.create({
+
+  baseURL:
+    "http://localhost:3000/api",
+});
+
+
+
+function getToken() {
+
+  return localStorage.getItem(
+    "token"
+  );
+}
+
+
+
+// ======================
+// CREATE BATTLE
+// ======================
+
+export async function createBattle(
+  data
+) {
+
+  const response =
+    await API.post(
+
+      "/battles",
+
+      data,
+
+      {
+        headers: {
+          Authorization:
+            `Bearer ${getToken()}`
+        }
+      }
+    );
+
+  return response.data;
+}
+
+
+
+// ======================
+// SEARCH USERS
+// ======================
+
+export async function searchUsers(
+  query
+) {
+
+  const response =
+    await API.get(
+
+      `/users/search?q=${query}`,
+
+      {
+        headers: {
+          Authorization:
+            `Bearer ${getToken()}`
+        }
+      }
+    );
+
+  return response.data;
+}
+
+
+
+// ======================
+// ACCEPT BATTLE
+// ======================
+
+export async function acceptBattle(
+
+  battleId,
+
+  opponent_dare
+
+) {
+
+  const response =
+    await API.patch(
+
+      `/battles/${battleId}/accept`,
+
+      { opponent_dare },
+
+      {
+        headers: {
+          Authorization:
+            `Bearer ${getToken()}`
+        }
+      }
+    );
+
+  return response.data;
+}
+
+
+
+// ======================
+// DECLINE BATTLE
+// ======================
+
+export async function declineBattle(
+  battleId
+) {
+
+  const response =
+    await API.patch(
+
+      `/battles/${battleId}/decline`,
+
+      {},
+
+      {
+        headers: {
+          Authorization:
+            `Bearer ${getToken()}`
+        }
+      }
+    );
+
+  return response.data;
+}
+
+
+
+// ======================
+// BATTLE HISTORY
+// ======================
+
+export async function getBattleHistory(
+  userId
+) {
+
+  const response =
+    await API.get(
+
+      `/battles/history/${userId}`,
+
+      {
+        headers: {
+          Authorization:
+            `Bearer ${getToken()}`
+        }
+      }
+    );
+
+  return response.data;
+}
+
+
+
+// ======================
+// ACTIVE BATTLES
+// ======================
+
+export async function getActiveBattles(
+  userId
+) {
+
+  const response =
+    await API.get(
+
+      `/battles/active/${userId}`,
+
+      {
+        headers: {
+          Authorization:
+            `Bearer ${getToken()}`
+        }
+      }
+    );
+
+  return response.data;
+}
+// GET PENDING BATTLES
+export async function getPendingBattles(
+  userId
+) {
+
+  const response = await API.get(
+    `/battles/pending/${userId}`,
+    {
+      headers: {
+        Authorization:
+          `Bearer ${getToken()}`
+      }
+    }
+  );
+
+  return response.data;
+}

@@ -17,26 +17,45 @@ function Login(){
          setError("Please fill all fields");
         return;
         }
-        try{
-            setLoading(true);
-            const data=await loginUser({
-                email,
-                password,
-            });
-            console.log(data);
-            localStorage.setItem(
-            "token",
-            data.token
-          );
-           navigate("/dashboard");
-        }catch(error){
-            setError(
-         error.response?.data?.message ||
-        "Login failed"
-        );
-        }finally {
-           setLoading(false);
-        }
+       try {
+
+  setLoading(true);
+
+  const data = await loginUser({
+    email,
+    password,
+  });
+
+  console.log(data);
+
+  localStorage.setItem(
+    "token",
+    data.token
+  );
+
+  localStorage.setItem(
+    "userId",
+    data.userId
+  );
+
+  localStorage.setItem(
+    "username",
+    data.username
+  );
+
+  navigate("/dashboard");
+
+} catch(error) {
+
+  setError(
+    error.response?.data?.message ||
+    "Login failed"
+  );
+
+} finally {
+
+  setLoading(false);
+}
     }
     return(
          <div className="min-h-screen flex items-center justify-center bg-slate-900">

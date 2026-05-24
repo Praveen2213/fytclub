@@ -29,7 +29,15 @@ function Signup(){
             console.log(data);
             alert("Signup successfull");
         }catch(error){
-            console.log(error);
+            console.log(
+      error.response.data
+   );
+
+   alert(
+      JSON.stringify(
+         error.response.data
+      )
+   );
             setError( //optional chaining prevents if something is undefined
                 error.response?.data?.message || "Something went wrong" //fallback error
             );

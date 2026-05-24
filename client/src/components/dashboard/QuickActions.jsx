@@ -1,48 +1,46 @@
 import { useNavigate } from "react-router-dom";
-
-
-
 function QuickActions() {
-
   const navigate = useNavigate();
+ const actions = [
+  {
+    title: "Log Activity",
+    icon: "➕",
+    description: "Track your workout",
+    path: "/log-activity",
+    color:
+      "bg-slate-800 hover:bg-slate-700",
+  },
 
+  {
+    title: "Start Battle",
+    icon: "⚔️",
+    description:
+      "Challenge another player",
+    path: "/create-battle",
+    color:
+      "bg-orange-500 hover:bg-orange-600",
+  },
 
+  {
+    title: "History",
+    icon: "📜",
+    description:
+      "View past activities",
+    path: "/history",
+    color:
+      "bg-slate-800 hover:bg-slate-700",
+  },
 
-  const actions = [
-
-    {
-      title: "Log Activity",
-      icon: "➕",
-      description:
-        "Track your workout",
-      path: "/log-activity",
-    },
-
-    {
-      title: "Start Battle",
-      icon: "🥊",
-      description:
-        "Challenge friends",
-      path: "/battles",
-    },
-
-    {
-      title: "History",
-      icon: "📜",
-      description:
-        "View past activities",
-      path: "/history",
-    },
-
-    {
-      title: "Leaderboard",
-      icon: "🏆",
-      description:
-        "See top rankings",
-      path: "/leaderboard",
-    },
-  ];
-
+  {
+    title: "Leaderboard",
+    icon: "🏆",
+    description:
+      "See top rankings",
+    path: "/leaderboard",
+    color:
+      "bg-slate-800 hover:bg-slate-700",
+  },
+];
 
 
   return (
