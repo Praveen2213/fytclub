@@ -7,6 +7,8 @@ import HistoryCard from "../components/history/HistoryCard";
 import BattleHistoryCard from "../components/history/BattleHistoryCard";
 
 import { getHistory } from "../services/historyService";
+import { getActivities }
+from "../services/activityService";
 
 
 
@@ -16,81 +18,68 @@ function History() {
   // STATES
   // ======================
 
-  const [activities, setActivities] =
-    useState([]);
+const [activities, setActivities] =
+  useState([]);
+
+const [battleHistory,
+  setBattleHistory] =
+  useState([]);
 
   const [loading, setLoading] =
     useState(true);
-
-
-
-  // ======================
-  // TEMP BATTLE DATA
-  // LATER FROM BACKEND
-  // ======================
-
-  const battleHistory = [
-
-    {
-      id: 1,
-      opponent: "Praveen",
-      result: "Won",
-      yourScore: 540,
-      opponentScore: 480,
-      completedAt: "2026-05-20",
-    },
-
-    {
-      id: 2,
-      opponent: "Rahul",
-      result: "Lost",
-      yourScore: 320,
-      opponentScore: 410,
-      completedAt: "2026-05-18",
-    },
-
-  ];
-
-
-
   // ======================
   // FETCH HISTORY
   // ======================
 
   useEffect(() => {
 
-    async function fetchHistory() {
+  async function fetchHistory() {
 
-      try {
+    try {
 
-        // TEMP USER ID
+      // TEMP USER ID
 
-        const userId = 6;
+      const userId = 6;
 
 
 
-        const data =
-          await getHistory(userId);
+      // ======================
+      // FETCH ACTIVITIES
+      // ======================
 
-        setActivities(data);
+      const activityData =
+        await getActivities();
 
-      } catch (error) {
+      setActivities(
+        activityData
+      );
 
-        console.log(error);
 
-      } finally {
 
-        setLoading(false);
-      }
+      // ======================
+      // FETCH BATTLE HISTORY
+      // ======================
+
+      const battleData =
+        await getHistory(userId);
+
+      setBattleHistory(
+        battleData
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
     }
+  }
 
+  fetchHistory();
 
-
-    fetchHistory();
-
-  }, []);
-
-
+}, []);
 
 
   // ======================
