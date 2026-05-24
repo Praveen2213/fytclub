@@ -157,5 +157,36 @@ router.get('/active/:userId', authMiddleware, wrapAsync(async(req, res) => {
     res.status(200).json(result.rows);
 }));
 
+//pending invitations route
+router.get('/pending/:userId', authMiddleware, wrapAsync(async(req, res) => {
+    const userId = req.params.userId;
+
+    if(parseInt(userId) !== parseInt(req.userId)) {
+        return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    const result = await pool.query(`SELECT
+        b.id,
+        b.challenger_id,
+        b.opponent_id,
+        b.activity_types,
+        b.challenger_dare,
+        b.status,
+        b.created_at,
+        u.username as challenger_name
+
+      FROM battles b
+      JOIN users u
+      ON b.challenger_id = u.id
+      WHERE
+      b.opponent_id = $1
+      AND b.status = 'pending'
+      ORDER BY b.created_at DESC`,
+      [userId]
+    );
+
+    res.status(200).json(result.rows);
+}));
+
 module.exports = router;
 
