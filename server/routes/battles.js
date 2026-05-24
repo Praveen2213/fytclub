@@ -142,5 +142,20 @@ router.get('/history/:userId', authMiddleware, wrapAsync(async(req, res)=>{
     res.status(200).json(result.rows);
 }));
 
+//to get active battles
+router.get('/active/:userId', authMiddleware, wrapAsync(async(req, res) => {
+    const userId = req.params.userId;
+    const result = await pool.query(`SELECT b.id, b.status, b.start_date, b.end_date, u.username as opponent_name FROM battles b JOIN users u ON (
+        CASE
+          WHEN b.challenger_id = $1 THEN b.opponent_id = u.id
+          ELSE b.challenger_id = u.id
+        END
+      )
+       WHERE (b.challenger_id = $1 OR b.opponent_id = $1) AND b.status = 'active'`,[userId]
+    );
+
+    res.status(200).json(result.rows);
+}));
+
 module.exports = router;
 

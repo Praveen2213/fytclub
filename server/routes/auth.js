@@ -51,7 +51,11 @@ router.post('/login', strictLimit, validateLogin, wrapAsync(async(req, res) => {
         {expiresIn: '7d'}
     );
 
-    res.status(200).json({token});
+    res.status(200).json({
+        token,
+        userId: user.id,
+        username: user.username,
+    });                
 }));
 
 module.exports = router;
