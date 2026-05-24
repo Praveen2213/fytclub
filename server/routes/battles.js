@@ -134,6 +134,7 @@ router.get('/history/:userId', authMiddleware, wrapAsync(async(req, res)=>{
     if(parseInt(user) !== parseInt(req.userId)){
     return res.status(403).json({message: "Unauthorized"});
 }
+    //this is user's battle history
     const result = await pool.query(
         "SELECT b.challenger_id, b.opponent_id, o.username as opponent_name, b.start_date, b.end_date, b.status, b.winner_id FROM battles b LEFT JOIN users c ON b.challenger_id = c.id LEFT JOIN users o ON b.opponent_id = o.id WHERE (b.challenger_id = $1 OR b.opponent_id = $1)", [user]
     );

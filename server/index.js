@@ -13,6 +13,8 @@ const usersProfileRoutes = require('./routes/users');
 const activitiesRoutes = require('./routes/activities')(io);
 const usersImageUploadRoutes = require('./routes/users');
 const battleRoutes = require('./routes/battles');
+const dashboardRoutes = require("./routes/dashboard");
+const historyRoutes = require("./routes/history");
 
 // Socket.io — real-time connection handler
 io.on('connection', (socket)=>{
@@ -38,6 +40,8 @@ app.use('/api/users', usersProfileRoutes);
 app.use('/api/activities', activitiesRoutes);
 app.use('/api/users', usersImageUploadRoutes);
 app.use('/api/battles', battleRoutes);
+app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/history", historyRoutes);
 
 //global error handler
 app.use((err, req, res, next) => {
