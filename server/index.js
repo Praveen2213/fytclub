@@ -12,7 +12,7 @@ const authRoutes = require('./routes/auth');
 const usersProfileRoutes = require('./routes/users');
 const activitiesRoutes = require('./routes/activities')(io);
 const usersImageUploadRoutes = require('./routes/users');
-const battleRoutes = require('./routes/battles');
+const battleRoutes = require('./routes/battles')(io);
 const dashboardRoutes = require("./routes/dashboard");
 const historyRoutes = require("./routes/history");
 

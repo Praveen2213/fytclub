@@ -7,6 +7,7 @@ const wrapAsync = require('../utils/wrapAsync');
 const {strictLimit} = require('../limiter');
 const { validateBattle, validateAccept } = require('../validator');
 const { validationResult } = require('express-validator');
+module.exports = (io) => {
 
 router.post('/', authMiddleware, strictLimit, validateBattle, wrapAsync(async(req, res) =>{
     const errors = validationResult(req);
@@ -126,6 +127,13 @@ router.patch('/:id/decline', authMiddleware, wrapAsync(async(req, res)=>{
         "UPDATE battles SET status = $1 WHERE id = $2 RETURNING *", ['decline', battle_id]
     );
 
+    const oppo_name = await pool.query(
+        "SELECT username FROM users WHERE id = $1", [battle.rows[0].challenger_id]
+    );
+
+    io.to(`battle_${battle_id}`).emit('battle_declined', { 
+        message: `${oppo_name.rows[0].username} declined your battle` });
+
     res.status(200).json(result.rows[0]);
 }));
 
@@ -188,5 +196,5 @@ router.get('/pending/:userId', authMiddleware, wrapAsync(async(req, res) => {
     res.status(200).json(result.rows);
 }));
 
-module.exports = router;
-
+return router;
+};
