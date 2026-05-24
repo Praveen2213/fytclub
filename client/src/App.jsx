@@ -7,9 +7,28 @@ import LogActivity from "./pages/LogActivity";
 import Leaderboard from "./pages/Leaderboard";
 import History from "./pages/History";
 import Profile from "./pages/Profile";
+import CreateBattle from "./pages/CreateBattle";
+import Battles from "./pages/Battles";
+import BattleDetails
+from "./pages/BattleDetails";
+import BattleRequest from "./pages/BattleRequest";
 function App(){
   return(
     <Routes>
+      <Route
+  path="/create-battle"
+  element={<CreateBattle />}
+/>
+<Route
+  path="/battles"
+  element={<Battles />}
+/>
+<Route
+  path="/battles/:id"
+  element={<BattleDetails />}
+/>
+<Route path="/battle-request/id/:id" element={<BattleRequest />} />
+<Route path="/battle-request/:token" element={<BattleRequest />} />
     <Route
      path="/dashboard"
      element={

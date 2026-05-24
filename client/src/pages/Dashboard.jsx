@@ -6,9 +6,13 @@ import QuickActions from "../components/dashboard/QuickActions";
 import ActivityCard from "../components/dashboard/ActivityCard";
 import { getActivities } from "../services/activityService";
 import { getDashboardStats } from "../services/dashboardService";
-
+import { useNavigate }
+from "react-router-dom";
+import {
+  getActiveBattles
+} from "../services/battleService";
 function Dashboard() {
-
+const navigate = useNavigate();
   // ======================
   // STATES
   // ======================
@@ -22,7 +26,8 @@ function Dashboard() {
   const [loading, setLoading] =
     useState(true);
 
-
+const [activeBattles, setActiveBattles] =
+  useState([]);
 
   // ======================
   // FETCH DATA
@@ -31,7 +36,17 @@ function Dashboard() {
   useEffect(() => {
 
     async function fetchDashboardData() {
+    const userId =
+  localStorage.getItem("userId");
 
+const battleData =
+  await getActiveBattles(userId);
+console.log(battleData);
+setActiveBattles(
+  Array.isArray(battleData)
+    ? battleData
+    : []
+);
       try {
 
         // FETCH ACTIVITIES
@@ -65,7 +80,6 @@ function Dashboard() {
 
 
     fetchDashboardData();
-
   }, []);
 
 
@@ -136,34 +150,60 @@ function Dashboard() {
 
     </h2>
 
-    <button className="text-blue-400 hover:text-blue-300 text-sm">
+    <button
+  onClick={() =>
+    navigate("/battles")
+  }
 
-      See All
+  className="text-blue-400 hover:text-blue-300 text-sm"
+>
 
-    </button>
+  See All
 
-  </div>
-
-
-
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-    <ActiveBattleCard
-      opponent="Praveen"
-      yourPoints={520}
-      opponentPoints={470}
-      daysLeft={2}
-    />
-
-    <ActiveBattleCard
-      opponent="Rahul"
-      yourPoints={300}
-      opponentPoints={420}
-      daysLeft={5}
-    />
+</button>
 
   </div>
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
+  {
+    activeBattles.length === 0 ? (
+
+      <div className="bg-slate-800 rounded-2xl p-6 text-slate-400">
+
+        No active battles
+
+      </div>
+
+    ) : (
+
+      activeBattles.map((battle) => (
+
+        <div
+          key={battle.id}
+
+          onClick={() =>
+            navigate(
+              `/battle/${battle.id}`
+            )
+          }
+
+          className="cursor-pointer"
+        >
+
+          <ActiveBattleCard
+            opponent={
+              battle.opponent_name
+            }
+
+            daysLeft={7}
+          />
+
+        </div>
+      ))
+    )
+  }
+
+</div>
 </div>
 
 {/* ======================
