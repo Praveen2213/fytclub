@@ -58,7 +58,7 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
   if(!errors.isEmpty()){
     return res.status(400).json({errors: errors.array()}); 
   }
-  const { type, value, unit, battle_id } = req.body;
+  const { type, value, unit } = req.body;
   const user_id = req.userId;
 
   const points = calculatePoints(type, value);
@@ -69,21 +69,7 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
     [user_id, type, value, unit, points]
   );
 
-  //battle dhundho
-  let battles;
-
-  if(battle_id) {
-  // Mode 1 — specific battle
-  const battleResult = await pool.query(
-    `SELECT * FROM battles 
-     WHERE id = $1 
-     AND (challenger_id = $2 OR opponent_id = $2) 
-     AND status = 'active'`,
-    [battle_id, user_id]
-  );
-  battles = battleResult.rows;
-  } else {
-  // Mode 2 — quick log — us type ki saari active battles
+  //quick log — us type ki saari active battles
   const battleResult = await pool.query(
     `SELECT * FROM battles 
      WHERE (challenger_id = $1 OR opponent_id = $1) 
@@ -91,8 +77,7 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
      AND $2 = ANY(activity_types)`,
     [user_id, type]
   );
-  battles = battleResult.rows;
-}
+  let battles = battleResult.rows;
 
   if(battles.length === 0){
     return res.status(200).json(result.rows[0]);
