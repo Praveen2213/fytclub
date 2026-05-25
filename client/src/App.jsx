@@ -24,7 +24,7 @@ function App(){
   element={<Battles />}
 />
 <Route
-  path="/battles/:id"
+  path="/battle/:id"
   element={<BattleDetails />}
 />
 <Route path="/battle-request/id/:id" element={<BattleRequest />} />
