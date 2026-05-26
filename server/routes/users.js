@@ -1,26 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db');
+const bcrypt = require('bcryptjs');
 const {upload} = require('../cloudinary');
 const authMiddleware = require('../middleware');
 const wrapAsync = require('../utils/wrapAsync');
 const { strictLimit } = require('../limiter');
-
-//profile image/avatar upload route
-router.patch('/:id/avatar', authMiddleware, strictLimit, upload.single('avatar'), wrapAsync(async(req, res)=>{
-    if(parseInt(req.params.id) !== parseInt(req.userId)){
-        return res.status(403).json({message: "Unauthorized"});
-    }
-
-    const avatarURL = req.file.path;
-    const userId = req.params.id;
-
-    const result = await pool.query(
-        'UPDATE users SET avatar_url = $1 WHERE id = $2 RETURNING id, username, avatar_url', [avatarURL, userId]
-    );
-
-    res.status(200).json(result.rows[0]);
-}));
+const { validationResult } = require('express-validator');
+const { validateEdit, validatePasswordChange } = require('../validator');
 
 //leaderboard api
 router.get('/leaderboard', wrapAsync(async(req, res)=>{
@@ -44,7 +31,87 @@ router.get('/search', authMiddleware, wrapAsync(async(req, res) => {
     res.status(200).json(result.rows);
 }));
 
-//prfile api
+//profile image/avatar upload route
+router.patch('/:id/avatar', authMiddleware, strictLimit, upload.single('avatar'), wrapAsync(async(req, res)=>{
+    if(parseInt(req.params.id) !== parseInt(req.userId)){
+        return res.status(403).json({message: "Unauthorized"});
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const avatarURL = req.file.path;
+    const userId = req.params.id;
+
+    const result = await pool.query(
+        'UPDATE users SET avatar_url = $1 WHERE id = $2 RETURNING id, username, avatar_url', [avatarURL, userId]
+    );
+
+    res.status(200).json(result.rows[0]);
+}));
+
+//password change 
+router.patch('/:id/password', authMiddleware, validatePasswordChange, wrapAsync(async(req, res) => {
+    if(parseInt(req.params.id) !== parseInt(req.userId)) {
+        return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { oldPassword, newPassword } = req.body;
+
+    if(oldPassword === newPassword) {
+        return res.status(400).json({ message: 'New password cannot be same as old password' });
+    }
+
+    const user = await pool.query(
+        "SELECT password_hash FROM users WHERE id = $1", [req.params.id]
+    );
+
+    const isMatch = await bcrypt.compare(oldPassword, user.rows[0].password_hash);
+    if(!isMatch) {
+        return res.status(401).json({ message: 'Incorrect old password' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await pool.query(
+        "UPDATE users SET password_hash = $1 WHERE id = $2", [hashedPassword, req.params.id]
+    );
+
+    res.status(200).json({ message: 'Password updated successfully' });
+}));
+
+//edit profile
+router.patch('/:id/edit', authMiddleware, validateEdit, wrapAsync(async(req, res) => {
+    if(parseInt(req.params.id) !== parseInt(req.userId)) {
+        return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+    const { username, email, bio } = req.body;
+    
+    const result = await pool.query(
+        `UPDATE users SET 
+         username = COALESCE($1, username),
+         email = COALESCE($2, email),
+         bio = COALESCE($3, bio)
+         WHERE id = $4 
+         RETURNING id, username, email, bio, avatar_url`,
+        [username, email, bio, req.params.id]
+    );
+    
+    res.status(200).json(result.rows[0]);
+}));
+
+//profile api
 router.get('/:id', wrapAsync(async (req, res) =>{
     const id = req.params.id;
 
@@ -59,7 +126,5 @@ router.get('/:id', wrapAsync(async (req, res) =>{
 
     res.json(result.rows[0]);
 }));
-
-
 
 module.exports = router;

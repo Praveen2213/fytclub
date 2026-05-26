@@ -28,4 +28,15 @@ const validateAccept = [
     body('opponent_dare').optional()
 ];
 
-module.exports = { validateRegister, validateLogin, validateActivity, validateBattle, validateAccept};
+const validateEdit = [
+    body('username').optional().isLength({min: 3, max: 50}).withMessage('Username must be 3-50 characters'),
+    body('email').optional().isEmail().withMessage('Valid email required'),
+    body('bio').optional().isLength({max: 200}).withMessage('Bio must be under 200 characters')
+];
+
+const validatePasswordChange = [
+    body('oldPassword').notEmpty().withMessage('Old password required'),
+    body('newPassword').notEmpty().isLength({min: 6}).matches(/\d/).withMessage('Must contain a number').matches(/[^a-zA-Z0-9]/).withMessage('Must contain special character'),
+];
+
+module.exports = { validateRegister, validateLogin, validateActivity, validateBattle, validateAccept, validateEdit, validatePasswordChange};

@@ -4,7 +4,7 @@ const { generateInsight } = require("./ai");
 
 const startCronJobs = (io) => {
   // Cron job — har ghante expired battles check karo aur winner decide karo
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
     console.log("Checking for completed battles...");
 
     const expiredBattles = await pool.query(
