@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cors = require('cors');
 const startCronJobs = require('./cron');
 const express = require('express');
 const app = express();
@@ -30,6 +31,12 @@ io.on('connection', (socket)=>{
         console.log('user disconnected:', socket.id);
     });
 });
+
+app.use(cors({
+    origin: process.env.CLIENT_URL, 
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    credentials: true
+}));
 
 startCronJobs(io);
 

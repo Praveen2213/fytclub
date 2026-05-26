@@ -30,6 +30,7 @@ CREATE TABLE battles (
   end_date TIMESTAMP,
   challenger_dare TEXT,
   opponent_dare TEXT,
+  midweek_sent BOOLEAN DEFAULT false,
   winner_id INTEGER REFERENCES users(id),
   invite_token VARCHAR,
   created_at TIMESTAMP DEFAULT NOW() 
