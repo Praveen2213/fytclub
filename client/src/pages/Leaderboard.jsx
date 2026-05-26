@@ -17,6 +17,17 @@ function Leaderboard(){
             }
         }
         fetchLeaderboard();
+          // AUTO REFRESH EVERY 5 SEC
+  const interval =
+    setInterval(() => {
+
+      fetchLeaderboard();
+
+    }, 5000);
+
+  // CLEANUP
+  return () =>
+    clearInterval(interval);
     },[]);
     function getWinRate(wins,losses){ //helper function
         const total=wins+losses;

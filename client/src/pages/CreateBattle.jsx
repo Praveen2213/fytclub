@@ -1,24 +1,26 @@
 import { useState } from "react";
 import MainLayout from "../layouts/MainLayout";
+
 import {
   createBattle,
   searchUsers,
-}
-from "../services/battleService";
-function CreateBattle(){
-     // ======================
+} from "../services/battleService";
+
+function CreateBattle() {
+
+  // ======================
   // STATES
   // ======================
 
-const [search, setSearch] =
-  useState("");
+  const [search, setSearch] =
+    useState("");
 
-const [users, setUsers] =
-  useState([]);
+  const [users, setUsers] =
+    useState([]);
 
-const [selectedUser,
-  setSelectedUser] =
-  useState(null);
+  const [selectedUser,
+    setSelectedUser] =
+    useState(null);
 
   const [activityTypes,
     setActivityTypes] =
@@ -27,61 +29,68 @@ const [selectedUser,
   const [challengerDare,
     setChallengerDare] =
     useState("");
-  
-  const [createdBattleLink, setCreatedBattleLink] =
-  useState("");
+
+  const [createdBattleLink,
+    setCreatedBattleLink] =
+    useState("");
 
   const [loading, setLoading] =
     useState(false);
-    // ======================
+
+  // ======================
   // HANDLE CHECKBOX
   // ======================
 
-  function handleActivityChange(type) { //act as a toggler
+  function handleActivityChange(type) {
 
     if (
       activityTypes.includes(type)
     ) {
 
-      setActivityTypes( //if checkbox already selected the activity then remove it
-        activityTypes.filter( //filter create a new array after removing some items
+      setActivityTypes(
+        activityTypes.filter(
           (item) => item !== type
         )
       );
 
     } else {
 
-      setActivityTypes([ //if not selected then add to its state array
+      setActivityTypes([
         ...activityTypes,
         type,
       ]);
     }
   }
-  //HANDLE SEARCH
+
+  // ======================
+  // HANDLE SEARCH
+  // ======================
+
   async function handleSearch(value) {
 
-  setSearch(value);
+    setSearch(value);
 
-  if(value.length < 1){
+    if (value.length < 1) {
 
-    setUsers([]);
+      setUsers([]);
 
-    return;
+      return;
+    }
+
+    try {
+
+      const data =
+        await searchUsers(value);
+
+      setUsers(data);
+
+    } catch (error) {
+
+      console.log(error);
+    }
   }
 
-  try {
-
-    const data =
-      await searchUsers(value);
-
-    setUsers(data);
-
-  } catch (error) {
-
-    console.log(error);
-  }
-}
-   // ======================
+  // ======================
   // HANDLE SUBMIT
   // ======================
 
@@ -89,55 +98,75 @@ const [selectedUser,
 
     e.preventDefault();
 
+    // VALIDATION
+
+    if (!selectedUser) {
+
+      alert("Please select opponent");
+
+      return;
+    }
+
+    if (activityTypes.length === 0) {
+
+      alert("Select at least one activity type");
+
+      return;
+    }
+
     try {
 
       setLoading(true);
 
+      // API CALL
+
       const data =
-  await createBattle({
+        await createBattle({
 
-    opponent_id:
-      selectedUser.id,
+          opponent_id:
+            selectedUser.id,
 
-    activity_types:
-      activityTypes,
+          activity_types:
+            activityTypes,
 
-    challenger_dare:
-      challengerDare,
-  });
+          challenger_dare:
+            challengerDare,
+        });
 
-console.log(data);
+      console.log(data);
 
-const inviteLink =
-  `${window.location.origin}/accept/${response.invite_token}`;
+      // CREATE INVITE LINK
 
-setCreatedBattleLink(
-  inviteLink
-);
+      const inviteLink =
+        `${window.location.origin}/accept/${data.invite_token}`;
 
-alert(
-  "Battle challenge sent!"
-);
+      setCreatedBattleLink(
+        inviteLink
+      );
 
+      alert(
+        "Challenge Sent ✅"
+      );
 
       // RESET FORM
 
       setSelectedUser(null);
 
-setSearch("");
+      setSearch("");
 
-setUsers([]);
+      setUsers([]);
 
-setActivityTypes([]);
+      setActivityTypes([]);
 
-setChallengerDare("");
+      setChallengerDare("");
 
     } catch (error) {
 
       console.log(error);
 
       alert(
-        error.response?.data?.message
+        error.response?.data?.message ||
+        "Failed to create battle"
       );
 
     } finally {
@@ -146,17 +175,13 @@ setChallengerDare("");
     }
   }
 
-
-
   return (
 
     <MainLayout>
 
       <div className="max-w-3xl mx-auto p-6 text-white">
 
-        {/* ======================
-            HEADER
-        ====================== */}
+        {/* HEADER */}
 
         <div className="mb-10">
 
@@ -175,102 +200,94 @@ setChallengerDare("");
 
         </div>
 
-
-
-        {/* ======================
-            FORM
-        ====================== */}
+        {/* FORM */}
 
         <form
           onSubmit={handleSubmit}
           className="bg-slate-800 rounded-3xl p-8 space-y-7 shadow-xl border border-slate-700"
         >
+
           {/* SEARCH USER */}
 
-<div>
+          <div>
 
-  <label className="block mb-3 font-semibold">
+            <label className="block mb-3 font-semibold">
 
-    Search Opponent
+              Search Opponent
 
-  </label>
+            </label>
 
-  <input
-    type="text"
+            <input
+              type="text"
 
-    value={search}
+              value={search}
 
-    onChange={(e) =>
-      handleSearch(
-        e.target.value
-      )
-    }
+              onChange={(e) =>
+                handleSearch(
+                  e.target.value
+                )
+              }
 
-    placeholder="Search username..."
+              placeholder="Search username..."
 
-    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 outline-none"
-  />
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 outline-none"
+            />
 
+            {/* SEARCH RESULTS */}
 
+            {
+              users.length > 0 && (
 
-  {/* SEARCH RESULTS */}
+                <div className="mt-3 bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
 
-  {
-    users.length > 0 && (
+                  {
+                    users.map((user) => (
 
-      <div className="mt-3 bg-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+                      <button
+                        key={user.id}
 
-        {
-          users.map((user) => (
+                        type="button"
 
-            <button
-              key={user.id}
+                        onClick={() => {
 
-              type="button"
+                          setSelectedUser(user);
 
-              onClick={() => {
+                          setSearch(
+                            user.username
+                          );
 
-                setSelectedUser(user);
+                          setUsers([]);
+                        }}
 
-                setSearch(
-                  user.username
-                );
+                        className="w-full text-left px-4 py-3 hover:bg-slate-700 transition-all duration-300 border-b border-slate-700"
+                      >
 
-                setUsers([]);
-              }}
+                        {user.username}
 
-              className="w-full text-left px-4 py-3 hover:bg-slate-700 transition-all duration-300 border-b border-slate-700"
-            >
+                      </button>
+                    ))
+                  }
 
-              {user.username}
+                </div>
+              )
+            }
 
-            </button>
-          ))
-        }
+            {/* SELECTED USER */}
 
-      </div>
-    )
-  }
+            {
+              selectedUser && (
 
+                <div className="mt-3 text-green-400 font-semibold">
 
+                  Selected:
+                  {" "}
+                  {selectedUser.username}
 
-  {/* SELECTED USER */}
+                </div>
+              )
+            }
 
-  {
-    selectedUser && (
-
-      <div className="mt-3 text-green-400">
-
-        Selected:
-        {" "}
-        {selectedUser.username}
-
-      </div>
-    )
-  }
-
-</div>
-
+          </div>
 
           {/* ACTIVITY TYPES */}
 
@@ -337,8 +354,6 @@ setChallengerDare("");
 
           </div>
 
-
-
           {/* DARE */}
 
           <div>
@@ -360,18 +375,16 @@ setChallengerDare("");
                 )
               }
 
-              placeholder="Example:
-              Loser buys protein shake 😈"
+              placeholder="Loser buys protein shake 😈"
 
               className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 outline-none resize-none"
+
               required
             />
 
           </div>
 
-
-
-          {/* BUTTON */}
+          {/* SUBMIT BUTTON */}
 
           <button
             type="submit"
@@ -390,65 +403,73 @@ setChallengerDare("");
           </button>
 
         </form>
-  {/*INVITE LINK UI*/}
-  {
-  createdBattleLink && (
 
-    <div className="mt-8 bg-slate-800 border border-orange-500 rounded-2xl p-5">
+        {/* INVITE LINK UI */}
 
-      <h2 className="text-2xl font-bold mb-4">
+        {
+          createdBattleLink && (
 
-        Invite Link 🔗
+            <div className="mt-8 bg-slate-800 border border-orange-500 rounded-2xl p-5">
 
-      </h2>
+              <h2 className="text-2xl font-bold mb-4">
 
-      <div className="bg-slate-900 p-3 rounded-xl text-sm break-all">
+                Challenge Sent ✅
 
-        {createdBattleLink}
+              </h2>
 
-      </div>
+              <div className="bg-slate-900 p-3 rounded-xl text-sm break-all">
 
-      <div className="flex gap-3 mt-4">
+                {createdBattleLink}
 
-        <button
-          onClick={() => {
-            navigator.clipboard.writeText(
-              createdBattleLink
-            );
+              </div>
 
-            alert("Link copied!");
-          }}
+              <div className="flex gap-3 mt-4 flex-wrap">
 
-          className="bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl font-semibold"
-        >
+                {/* COPY BUTTON */}
 
-          Copy Link
+                <button
+                  onClick={() => {
 
-        </button>
+                    navigator.clipboard.writeText(
+                      createdBattleLink
+                    );
 
-        <a
-          href={`https://wa.me/?text=${encodeURIComponent(createdBattleLink)}`}
-          target="_blank"
-          rel="noreferrer"
+                    alert("Link copied!");
+                  }}
 
-          className="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-semibold"
-        >
+                  className="bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl font-semibold"
+                >
 
-          Share WhatsApp
+                  Copy Link
 
-        </a>
+                </button>
 
-      </div>
+                {/* WHATSAPP SHARE */}
 
-    </div>
-  )
-}
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(createdBattleLink)}`}
+
+                  target="_blank"
+
+                  rel="noreferrer"
+
+                  className="bg-green-500 hover:bg-green-600 px-5 py-2 rounded-xl font-semibold"
+                >
+
+                  Share WhatsApp
+
+                </a>
+
+              </div>
+
+            </div>
+          )
+        }
+
       </div>
 
     </MainLayout>
   );
 }
-
-
 
 export default CreateBattle;

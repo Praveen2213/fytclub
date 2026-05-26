@@ -17,7 +17,7 @@ function Navbar() {
 
     localStorage.removeItem("username");
 
-    navigate("/login");
+    navigate("/");
   }
 
   const navLinks = [
@@ -31,6 +31,10 @@ function Navbar() {
       name: "Battles",
       path: "/battles",
     },
+      {
+    name: "Battle History",
+    path: "/battle-history",
+  },
     {
       name: "Leaderboard",
       path: "/leaderboard",
@@ -220,7 +224,7 @@ function Navbar() {
     {/* HISTORY */}
 
     <Link
-      to="/history"
+      to="/activity-history"
 
       className="
         block px-5 py-4
@@ -229,7 +233,7 @@ function Navbar() {
       "
     >
 
-      ⚔️ Battle History
+      ⚔️ Activity History
 
     </Link>
     {/* LOGOUT */}

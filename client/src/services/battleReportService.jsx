@@ -1,20 +1,20 @@
 import axios from "axios";
 
 const API =
-  "http://localhost:3000/api/history";
+  "http://localhost:3000/api/battles";
 
 // ======================
-// ACTIVITY HISTORY
+// GET BATTLE EVENTS
 // ======================
 
-export async function getActivityHistory(
-  userId
+export async function getBattleEvents(
+  battleId
 ) {
 
   const response =
     await axios.get(
 
-      `${API}/${userId}/activity_history`,
+      `${API}/${battleId}/events`,
 
       {
         headers: {
@@ -28,17 +28,17 @@ export async function getActivityHistory(
 }
 
 // ======================
-// BATTLE HISTORY
+// GET AI INSIGHTS
 // ======================
 
-export async function getBattleHistory(
-  userId
+export async function getBattleInsights(
+  battleId
 ) {
 
   const response =
     await axios.get(
 
-      `${API}/${userId}/battle_history`,
+      `http://localhost:3000/api/history/${battleId}/insights`,
 
       {
         headers: {

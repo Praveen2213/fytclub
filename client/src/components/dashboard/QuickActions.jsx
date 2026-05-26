@@ -22,11 +22,11 @@ function QuickActions() {
   },
 
   {
-    title: "History",
+    title: "Activity History",
     icon: "📜",
     description:
       "View past activities",
-    path: "/history",
+    path: "/activity-history",
     color:
       "bg-slate-800 hover:bg-slate-700",
   },

@@ -5,12 +5,15 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import LogActivity from "./pages/LogActivity";
 import Leaderboard from "./pages/Leaderboard";
-import History from "./pages/History";
+import ActivityHistory from "./pages/ActivityHistory";
+import BattleHistory from "./pages/BattleHistory";
 import Profile from "./pages/Profile";
 import CreateBattle from "./pages/CreateBattle";
 import Battles from "./pages/Battles";
 import BattleDetails
 from "./pages/BattleDetails";
+import BattleReport
+from "./pages/BattleReport";
 import BattleRequest from "./pages/BattleRequest";
 function App(){
   return(
@@ -18,6 +21,10 @@ function App(){
       <Route
   path="/create-battle"
   element={<CreateBattle />}
+/>
+<Route
+  path="/battle-report/:id"
+  element={<BattleReport />}
 />
 <Route
   path="/battles"
@@ -38,8 +45,13 @@ function App(){
   }
 />
 <Route
-  path="/history"
-  element={<History />}
+  path="/activity-history"
+  element={<ActivityHistory />}
+/>
+
+<Route
+  path="/battle-history"
+  element={<BattleHistory />}
 />
 <Route
   path="/leaderboard"
