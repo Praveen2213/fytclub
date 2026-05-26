@@ -49,7 +49,15 @@ else if (status === "active") {
     "bg-blue-500/20 text-blue-300";
 
 }
+// DRAW CONDITION
+else if (status === "draw") {
 
+  result = "Draw";
+
+  resultColor =
+    "bg-purple-500/20 text-purple-300 border border-purple-500/30";
+
+}
 else if (
   winner_id === currentUserId
 ) {

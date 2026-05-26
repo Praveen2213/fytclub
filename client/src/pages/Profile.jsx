@@ -1,31 +1,60 @@
+import { useEffect, useState } from "react";
+
+import { Link } from "react-router-dom";
+
 import MainLayout from "../layouts/MainLayout";
 
-
-
+import { getProfile }
+from "../services/profileService";
+import { useNavigate }
+from "react-router-dom";
 function Profile() {
+const navigate = useNavigate();
+  const userId =
+    localStorage.getItem("userId");
 
-  // TEMP USER DATA
-  // later backend
+  const [user, setUser] =
+    useState(null);
 
-  const user = {
+  const [loading, setLoading] =
+    useState(true);
 
-    username: "Roshni",
+  useEffect(() => {
 
-    email:
-      "roshni@gmail.com",
+    fetchProfile();
 
-    avatar:
-      "",
+  }, []);
 
-    totalPoints: 1240,
+  async function fetchProfile() {
 
-    totalWins: 12,
+    try {
 
-    totalLosses: 3,
+      const data =
+        await getProfile(userId);
 
-  };
+      setUser(data);
 
+    } catch (error) {
 
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+
+    return (
+
+      <div className="min-h-screen bg-slate-900 text-white flex items-center justify-center">
+
+        Loading Profile...
+
+      </div>
+    );
+  }
 
   return (
 
@@ -43,16 +72,14 @@ function Profile() {
 
             <div className="relative">
 
-              <div className="w-36 h-36 rounded-full bg-blue-500 flex items-center justify-center text-5xl font-bold overflow-hidden border-4 border-slate-700">
+              <div className="w-36 h-36 rounded-full bg-orange-500 flex items-center justify-center text-5xl font-bold overflow-hidden border-4 border-slate-700">
 
                 {
-                  user.avatar ? (
+                  user.avatar_url ? (
 
                     <img
-                      src={user.avatar}
-
+                      src={user.avatar_url}
                       alt="avatar"
-
                       className="w-full h-full object-cover"
                     />
 
@@ -64,17 +91,7 @@ function Profile() {
 
               </div>
 
-
-
-              <button className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 rounded-full px-3 py-2 text-sm shadow-lg">
-
-                ✏️
-
-              </button>
-
             </div>
-
-
 
             {/* USER INFO */}
 
@@ -86,35 +103,22 @@ function Profile() {
 
               </h1>
 
-
-
               <p className="text-slate-400 mt-2">
 
                 {user.email}
 
               </p>
 
+              <p className="text-slate-300 mt-4">
 
+                {
+                  user.bio
+                  || "No bio added yet"
+                }
+
+              </p>
 
               <div className="flex flex-wrap gap-4 mt-6">
-
-                <div className="bg-slate-900 px-5 py-3 rounded-2xl">
-
-                  <p className="text-slate-400 text-sm">
-
-                    Total Points
-
-                  </p>
-
-                  <h3 className="text-2xl font-bold text-orange-400">
-
-                    {user.totalPoints}
-
-                  </h3>
-
-                </div>
-
-
 
                 <div className="bg-slate-900 px-5 py-3 rounded-2xl">
 
@@ -126,13 +130,11 @@ function Profile() {
 
                   <h3 className="text-2xl font-bold text-green-400">
 
-                    {user.totalWins}
+                    {user.total_wins}
 
                   </h3>
 
                 </div>
-
-
 
                 <div className="bg-slate-900 px-5 py-3 rounded-2xl">
 
@@ -144,7 +146,27 @@ function Profile() {
 
                   <h3 className="text-2xl font-bold text-red-400">
 
-                    {user.totalLosses}
+                    {user.total_losses}
+
+                  </h3>
+
+                </div>
+
+                <div className="bg-slate-900 px-5 py-3 rounded-2xl">
+
+                  <p className="text-slate-400 text-sm">
+
+                    Joined
+
+                  </p>
+
+                  <h3 className="text-lg font-bold text-orange-400">
+
+                    {
+                      new Date(
+                        user.created_at
+                      ).toLocaleDateString()
+                    }
 
                   </h3>
 
@@ -158,9 +180,7 @@ function Profile() {
 
         </div>
 
-
-
-        {/* PROFILE SETTINGS */}
+        {/* SETTINGS */}
 
         <div className="mt-10 bg-slate-800 rounded-3xl p-8 border border-slate-700">
 
@@ -170,39 +190,28 @@ function Profile() {
 
           </h2>
 
-
-
           <div className="space-y-5">
 
-            <button className="w-full bg-slate-900 hover:bg-slate-700 transition-all duration-300 rounded-2xl p-5 text-left">
+            <Link
+              to="/edit-profile"
 
-              ✏️ Edit Username
+              className="block w-full bg-slate-900 hover:bg-slate-700 transition-all duration-300 rounded-2xl p-5"
+            >
 
-            </button>
+              ✏️ Edit Profile
 
+            </Link>
 
+            <button
+               onClick={() =>
+                 navigate("/change-password")
+                }
 
-            <button className="w-full bg-slate-900 hover:bg-slate-700 transition-all duration-300 rounded-2xl p-5 text-left">
+             className="w-full bg-slate-900 hover:bg-slate-700 transition-all duration-300 rounded-2xl p-5 text-left"
+            >
+             🔒 Change Password
 
-              🔒 Change Password
-
-            </button>
-
-
-
-            <button className="w-full bg-slate-900 hover:bg-slate-700 transition-all duration-300 rounded-2xl p-5 text-left">
-
-              📸 Upload Avatar
-
-            </button>
-
-
-
-            <button className="w-full bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-all duration-300 rounded-2xl p-5 text-left">
-
-              🚪 Logout
-
-            </button>
+             </button>
 
           </div>
 
@@ -213,7 +222,5 @@ function Profile() {
     </MainLayout>
   );
 }
-
-
 
 export default Profile;
