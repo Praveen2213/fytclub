@@ -1,0 +1,925 @@
+{
+  "info": {
+    "_postman_id": "0c1202d7-a3ad-4812-b922-3cb7d7072a1d",
+    "name": "FYTCLUB API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45043365",
+    "_collection_link": "https://go.postman.co/collection/45043365-0c1202d7-a3ad-4812-b922-3cb7d7072a1d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Activities",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/activities",
+          "request": {
+            "auth": {
+              "type": "bearer"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE3NzkzNTIzMzAsImV4cCI6MTc3OTk1NzEzMH0.f9HQyF_i5AQILJLXmyKsekU-FB2AMq3Gl1vUY6Zbz_Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"run\",\n    \"value\": 5,\n    \"unit\": \"km\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/activities",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "activities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/activities",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE3NzkzNTIzMzAsImV4cCI6MTc3OTk1NzEzMH0.f9HQyF_i5AQILJLXmyKsekU-FB2AMq3Gl1vUY6Zbz_Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/activities",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "activities"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/auth/register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser6\",\n    \"email\": \"test6@test.com\",\n    \"password\": \"test@123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/auth/login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test6@test.com\",\n    \"password\": \"test@123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Battles",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/battles",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE3NzkzNTIzMzAsImV4cCI6MTc3OTk1NzEzMH0.f9HQyF_i5AQILJLXmyKsekU-FB2AMq3Gl1vUY6Zbz_Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"opponent_id\": 7,\n    \"activity_types\": [\"run\", \"steps\"],\n    \"challenger_dare\": \"loser does 100 pushups\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/battles",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/6/accept",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImlhdCI6MTc3OTM1MjkwMSwiZXhwIjoxNzc5OTU3NzAxfQ.igyZW7mRL0v1AVcspNC1BZCuzBsWjefmoY0oBvvovO4",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"opponent_dare\": \"looser will do 20 pullups\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/battles/6/accept",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "6",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/6/decline",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse HTML response to extract posts",
+                  "const responseText = pm.response.text();",
+                  "",
+                  "// Extract posts using regex",
+                  "const postRegex = /<div class=\"post\">\\s*<h3 class=\"user\">([^<]+)<\\/h3>\\s*<h4 class=\"content\">([^<]+)<\\/h4>\\s*<\\/div>/g;",
+                  "const posts = [];",
+                  "let match;",
+                  "",
+                  "while ((match = postRegex.exec(responseText)) !== null) {",
+                  "    posts.push({",
+                  "        user: match[1].trim(),",
+                  "        content: match[2].trim()",
+                  "    });",
+                  "}",
+                  "",
+                  "// Create visualization template with Chart.js",
+                  "var template = `",
+                  "<div style=\"padding: 20px; font-family: Arial, sans-serif;\">",
+                  "    <h2 style=\"text-align: center; color: #333;\">Quora Posts Visualization</h2>",
+                  "    <canvas id=\"postsChart\" height=\"100\"></canvas>",
+                  "    <div style=\"margin-top: 30px;\">",
+                  "        <h3>Posts Details:</h3>",
+                  "        <table style=\"width: 100%; border-collapse: collapse;\">",
+                  "            <tr style=\"background-color: #f2f2f2;\">",
+                  "                <th style=\"padding: 10px; border: 1px solid #ddd; text-align: left;\">User</th>",
+                  "                <th style=\"padding: 10px; border: 1px solid #ddd; text-align: left;\">Content</th>",
+                  "            </tr>",
+                  "            {{#each posts}}",
+                  "            <tr>",
+                  "                <td style=\"padding: 10px; border: 1px solid #ddd;\">{{user}}</td>",
+                  "                <td style=\"padding: 10px; border: 1px solid #ddd;\">{{content}}</td>",
+                  "            </tr>",
+                  "            {{/each}}",
+                  "        </table>",
+                  "    </div>",
+                  "</div>",
+                  "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script>",
+                  "<script>",
+                  "    var ctx = document.getElementById(\"postsChart\");",
+                  "    var postsChart = new Chart(ctx, {",
+                  "        type: \"bar\",",
+                  "        data: {",
+                  "            labels: [],",
+                  "            datasets: [{",
+                  "                label: \"Content Length (characters)\",",
+                  "                data: [],",
+                  "                backgroundColor: [",
+                  "                    \"rgba(255, 99, 132, 0.7)\",",
+                  "                    \"rgba(54, 162, 235, 0.7)\",",
+                  "                    \"rgba(255, 206, 86, 0.7)\",",
+                  "                    \"rgba(75, 192, 192, 0.7)\",",
+                  "                    \"rgba(153, 102, 255, 0.7)\",",
+                  "                    \"rgba(255, 159, 64, 0.7)\"",
+                  "                ],",
+                  "                borderColor: [",
+                  "                    \"rgba(255, 99, 132, 1)\",",
+                  "                    \"rgba(54, 162, 235, 1)\",",
+                  "                    \"rgba(255, 206, 86, 1)\",",
+                  "                    \"rgba(75, 192, 192, 1)\",",
+                  "                    \"rgba(153, 102, 255, 1)\",",
+                  "                    \"rgba(255, 159, 64, 1)\"",
+                  "                ],",
+                  "                borderWidth: 1",
+                  "            }]",
+                  "        },",
+                  "        options: {",
+                  "            legend: { display: true },",
+                  "            title: {",
+                  "                display: true,",
+                  "                text: \"Posts by User - Content Length\"",
+                  "            },",
+                  "            scales: {",
+                  "                xAxes: [{",
+                  "                    display: true,",
+                  "                    scaleLabel: {",
+                  "                        display: true,",
+                  "                        labelString: \"User\"",
+                  "                    }",
+                  "                }],",
+                  "                yAxes: [{",
+                  "                    display: true,",
+                  "                    scaleLabel: {",
+                  "                        display: true,",
+                  "                        labelString: \"Content Length\"",
+                  "                    },",
+                  "                    ticks: {",
+                  "                        beginAtZero: true",
+                  "                    }",
+                  "                }]",
+                  "            }",
+                  "        }",
+                  "    });",
+                  "",
+                  "    pm.getData(function (err, value) {",
+                  "        postsChart.data.labels = value.posts.map(function(post) { return post.user; });",
+                  "        postsChart.data.datasets[0].data = value.posts.map(function(post) { return post.contentLength; });",
+                  "        postsChart.update();",
+                  "    });",
+                  "</script>`;",
+                  "",
+                  "function constructVisualizerPayload() {",
+                  "    return {",
+                  "        posts: posts.map(function(post) {",
+                  "            return {",
+                  "                user: post.user,",
+                  "                content: post.content,",
+                  "                contentLength: post.content.length",
+                  "            };",
+                  "        })",
+                  "    };",
+                  "}",
+                  "",
+                  "pm.visualizer.set(template, constructVisualizerPayload());"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImlhdCI6MTc3OTM1MjkwMSwiZXhwIjoxNzc5OTU3NzAxfQ.igyZW7mRL0v1AVcspNC1BZCuzBsWjefmoY0oBvvovO4",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/battles/6/decline",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "6",
+                "decline"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/accept/0300ebbb6638f2fabd3aae37cce40947",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk1MjUzOTcsImV4cCI6MTc4MDEzMDE5N30.NYb23YsRUBfd0CPw9hkvKgjmwAxRLClLIzwVKIxEuVE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/battles/accept/0300ebbb6638f2fabd3aae37cce40947",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "accept",
+                "0300ebbb6638f2fabd3aae37cce40947"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/active/12",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk1MjUzOTcsImV4cCI6MTc4MDEzMDE5N30.NYb23YsRUBfd0CPw9hkvKgjmwAxRLClLIzwVKIxEuVE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/battles/active/12",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "active",
+                "12"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/pending/12",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk1MjUzOTcsImV4cCI6MTc4MDEzMDE5N30.NYb23YsRUBfd0CPw9hkvKgjmwAxRLClLIzwVKIxEuVE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/battles/pending/12",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "pending",
+                "12"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/8/events",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk1MjUzOTcsImV4cCI6MTc4MDEzMDE5N30.NYb23YsRUBfd0CPw9hkvKgjmwAxRLClLIzwVKIxEuVE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/battles/8/events",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "8",
+                "events"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/battles/8/scores",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk1MjUzOTcsImV4cCI6MTc4MDEzMDE5N30.NYb23YsRUBfd0CPw9hkvKgjmwAxRLClLIzwVKIxEuVE",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/battles/8/scores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "battles",
+                "8",
+                "scores"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/users/leaderboard",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/leaderboard",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "leaderboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/users/search",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE3NzkzNTIzMzAsImV4cCI6MTc3OTk1NzEzMH0.f9HQyF_i5AQILJLXmyKsekU-FB2AMq3Gl1vUY6Zbz_Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/users/10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "10"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/users/10",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE3NzkzNTIzMzAsImV4cCI6MTc3OTk1NzEzMH0.f9HQyF_i5AQILJLXmyKsekU-FB2AMq3Gl1vUY6Zbz_Y",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/users/10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "10"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/users/12/password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk4MTc4MzMsImV4cCI6MTc4MDQyMjYzM30.2AWwvguP219OQS7ST0Pe6wxVHlOMOvmrUGN8VTnhUT0",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"test10@123\",\n  \"newPassword\": \"NewPass@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/12/password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "12",
+                "password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/users/12/edit",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk4MTc4MzMsImV4cCI6MTc4MDQyMjYzM30.2AWwvguP219OQS7ST0Pe6wxVHlOMOvmrUGN8VTnhUT0",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newusername\",\n  \"email\": \"newemail@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/12/edit",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "12",
+                "edit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/users/10/avatar",
+          "request": {
+            "auth": {
+              "type": "bearer"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJpYXQiOjE3NzkzNTIzMzAsImV4cCI6MTc3OTk1NzEzMH0.f9HQyF_i5AQILJLXmyKsekU-FB2AMq3Gl1vUY6Zbz_Y",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "uuid": "87cc8bed-d190-45f8-a67d-6083512476af",
+                  "src": "/Users/praveenyadav/Desktop/Gemini_Generated_Image_jky1pjky1pjky1pj.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/users/10/avatar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "users",
+                "10",
+                "avatar"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/dashboard",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk4MTg3OTUsImV4cCI6MTc4MDQyMzU5NX0.qpFTStmKQvXPI5XG28mUtIuC22iTkbkxyGlHj-FJBVU",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/dashboard",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "History",
+      "item": [
+        {
+          "name": "http://localhost:3000/api/history/12/activity_history",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk4MTg3OTUsImV4cCI6MTc4MDQyMzU5NX0.qpFTStmKQvXPI5XG28mUtIuC22iTkbkxyGlHj-FJBVU",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/history/12/activity_history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "history",
+                "12",
+                "activity_history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/history/12/battle_history",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk4MTg3OTUsImV4cCI6MTc4MDQyMzU5NX0.qpFTStmKQvXPI5XG28mUtIuC22iTkbkxyGlHj-FJBVU",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/history/12/battle_history",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "history",
+                "12",
+                "battle_history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:3000/api/history/12/insights",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJpYXQiOjE3Nzk4MTg3OTUsImV4cCI6MTc4MDQyMzU5NX0.qpFTStmKQvXPI5XG28mUtIuC22iTkbkxyGlHj-FJBVU",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/history/12/insights",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "history",
+                "12",
+                "insights"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

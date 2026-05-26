@@ -124,7 +124,7 @@ router.patch('/:id/decline', authMiddleware, wrapAsync(async(req, res)=>{
         return res.status(400).json({ message: 'Battle already accepted or completed' });
     }
     const result = await pool.query(
-        "UPDATE battles SET status = $1 WHERE id = $2 RETURNING *", ['decline', battle_id]
+        "UPDATE battles SET status = $1 WHERE id = $2 RETURNING *", ['declined', battle_id]
     );
 
     const oppo_name = await pool.query(
@@ -144,7 +144,7 @@ router.get('/active/:userId', authMiddleware, wrapAsync(async(req, res) => {
      if (parseInt(userId) !== parseInt(req.userId)) {
         return res.status(403).json({ message: 'Unauthorized' });
     }
-    
+
     const result = await pool.query(`SELECT b.id, b.status, b.start_date, b.end_date,
         b.challenger_dare, b.opponent_dare, b.challenger_id, b.opponent_id, u.username as opponent_name FROM battles b JOIN users u ON u.id = CASE
           WHEN b.challenger_id = $1 THEN b.opponent_id 
