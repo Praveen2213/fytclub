@@ -200,18 +200,20 @@ export async function getPendingBattles(
   return response.data;
 }
 // SCORES
-export async function getBattleScores(
-  battleId
-) {
+export async function getBattleScores(battleId){
+
   const response =
-    await axios.get(
-      `${API}/${battleId}/scores`,
-       {
-    headers: {
-      Authorization:
-        `Bearer ${localStorage.getItem("token")}`,
-    },
-  }
+    await API.get(
+
+      `/battles/${battleId}/scores`,
+
+      {
+        headers:{
+          Authorization:
+          `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+
     );
 
   return response.data;

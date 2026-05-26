@@ -15,6 +15,9 @@ from "./pages/BattleDetails";
 import BattleReport
 from "./pages/BattleReport";
 import BattleRequest from "./pages/BattleRequest";
+import EditProfile from "./pages/EditProfile";
+import ChangePassword
+from "./pages/ChangePassword";
 function App(){
   return(
     <Routes>
@@ -25,6 +28,14 @@ function App(){
 <Route
   path="/battle-report/:id"
   element={<BattleReport />}
+/>
+<Route
+  path="/change-password"
+  element={<ChangePassword />}
+/>
+<Route
+  path="/edit-profile"
+  element={<EditProfile />}
 />
 <Route
   path="/battles"

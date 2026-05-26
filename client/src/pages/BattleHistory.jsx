@@ -118,7 +118,7 @@ function BattleHistory() {
             SUMMARY CARDS
         ====================== */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
 
           {/* TOTAL BATTLES */}
 
@@ -150,13 +150,13 @@ function BattleHistory() {
 
             <p className="text-3xl font-bold mt-2 text-green-400">
 
-              {
-                battleHistory.filter(
-                  (battle) =>
-                    battle.winner_id ===
-                    currentUser
-                ).length
-              }
+             {
+  battleHistory.filter(
+    (battle) =>
+      battle.status !== "draw" &&
+      battle.winner_id === currentUser
+  ).length
+}
 
             </p>
 
@@ -174,23 +174,44 @@ function BattleHistory() {
 
             <p className="text-3xl font-bold mt-2 text-red-400">
 
-              {
-                battleHistory.filter(
-                  (battle) =>
+            {
+  battleHistory.filter(
+    (battle) =>
 
-                    battle.winner_id &&
-                    battle.winner_id !==
-                    currentUser
+      battle.status !== "draw" &&
+      battle.winner_id &&
+      battle.winner_id !== currentUser
 
-                ).length
-              }
+  ).length
+}
 
             </p>
 
           </div>
 
         </div>
+{/* DRAWS */}
 
+<div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+
+  <h3 className="text-slate-400">
+
+    Draw Battles
+
+  </h3>
+
+  <p className="text-3xl font-bold mt-2 text-yellow-400">
+
+    {
+      battleHistory.filter(
+        (battle) =>
+          battle.status === "draw"
+      ).length
+    }
+
+  </p>
+
+</div>
         {/* ======================
             BATTLE HISTORY
         ====================== */}
@@ -261,25 +282,29 @@ function BattleHistory() {
 
                         : battle.challenger_score;
 
-                    // ======================
-                    // RESULT
-                    // ======================
+             // ======================
+// RESULT
+// ======================
 
-                    let result = "Pending";
+let result = "Pending";
 
-                    if (
-                      battle.winner_id === currentUser
-                    ) {
+if (battle.status === "draw") {
 
-                      result = "Won";
+  result = "Draw";
 
-                    } else if (
-                      battle.winner_id &&
-                      battle.winner_id !== currentUser
-                    ) {
+} else if (
+  battle.winner_id === currentUser
+) {
 
-                      result = "Lost";
-                    }
+  result = "Won";
+
+} else if (
+  battle.winner_id &&
+  battle.winner_id !== currentUser
+) {
+
+  result = "Lost";
+}
 
                     return (
 
