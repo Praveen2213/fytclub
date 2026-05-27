@@ -1,15 +1,4 @@
-import axios from "axios";
-
-
-
-const API = axios.create({
-
-  baseURL:
-    "http://localhost:3000/api",
-});
-
-
-
+import API from "./api";
 function getToken() {
 
   return localStorage.getItem(
@@ -163,9 +152,10 @@ export async function getBattleHistory(
 // ACTIVE BATTLES
 // ======================
 
-export async function getActiveBattles(
-  userId
-) {
+export async function getActiveBattles(userId) {
+
+  const token =
+    localStorage.getItem("token");
 
   const response =
     await API.get(
@@ -175,8 +165,8 @@ export async function getActiveBattles(
       {
         headers: {
           Authorization:
-            `Bearer ${getToken()}`
-        }
+            `Bearer ${token}`,
+        },
       }
     );
 
@@ -200,7 +190,12 @@ export async function getPendingBattles(
   return response.data;
 }
 // SCORES
-export async function getBattleScores(battleId){
+export async function getBattleScores(
+  battleId
+) {
+
+  const token =
+    localStorage.getItem("token");
 
   const response =
     await API.get(
@@ -208,12 +203,11 @@ export async function getBattleScores(battleId){
       `/battles/${battleId}/scores`,
 
       {
-        headers:{
+        headers: {
           Authorization:
-          `Bearer ${localStorage.getItem("token")}`,
+            `Bearer ${token}`,
         },
       }
-
     );
 
   return response.data;

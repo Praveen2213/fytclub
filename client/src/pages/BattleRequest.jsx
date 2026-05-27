@@ -28,14 +28,14 @@ const id = params.id;
         // CASE 1: Invite Link (token)
         if (token) {
           response = await axios.get(
-            `http://localhost:3000/api/battles/accept/${token}`
+           `${import.meta.env.VITE_API_URL}/battles/accept/${token}`,
           );
         }
 
         // CASE 2: Coming from pending list (id)
         else if (id) {
           response = await axios.get(
-            `http://localhost:3000/api/battles/${id}`,
+            `${import.meta.env.VITE_API_URL}/battles/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,

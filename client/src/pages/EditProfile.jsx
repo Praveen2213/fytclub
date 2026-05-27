@@ -67,50 +67,34 @@ function EditProfile() {
     });
   }
 
-  async function handleSubmit(e) {
-
+  // ✅ CORRECT handleSubmit
+async function handleSubmit(e) {
     e.preventDefault();
 
     try {
+        setLoading(true);
 
-      setLoading(true);
+        // STEP 1 — update text profile data
+        await updateProfile(userId, formData);
 
-      await updateProfile(
-        userId,
-        formData
-      );
+        // STEP 2 — upload avatar only if a new file was selected
+        if (avatar) {
+            const avatarData = new FormData();
+            avatarData.append("avatar", avatar); // key must be "avatar" — matches backend upload.single('avatar')
+            await uploadAvatar(userId, avatarData);
+        }
 
-      if (avatar) {
-
-        const avatarData =
-          new FormData();
-
-        avatarData.append(
-          "avatar",
-          avatar
-        );
-
-        await uploadAvatar(
-          userId,
-          avatarData
-        );
-      }
-
-      alert(
-        "Profile updated!"
-      );
-
-      navigate("/profile");
+        alert("Profile updated!");
+        navigate("/profile");
 
     } catch (error) {
-
-      console.log(error);
+        console.log(error.response?.data); // 🔴 shows exact backend error message
+        alert(error.response?.data?.message || "Update failed"); // show user what went wrong
 
     } finally {
-
-      setLoading(false);
+        setLoading(false);
     }
-  }
+}
 
   return (
 

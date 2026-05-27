@@ -1,94 +1,79 @@
-import axios from "axios";
+import API from "./api";
 
-const BASE_URL =
-"http://localhost:3000/api/users";
-
-export async function getProfile(userId){
-
-  const token =
-    localStorage.getItem("token");
+// GET PROFILE
+export async function getProfile(userId) {
 
   const response =
-    await axios.get(
-
-      `${BASE_URL}/${userId}`,
-
-      {
-        headers:{
-          Authorization:
-          `Bearer ${token}`
-        }
-      }
+    await API.get(
+      `/users/${userId}`
     );
 
   return response.data;
 }
 
-export async function updateProfile(userId,data){
-
-  const token =
-    localStorage.getItem("token");
-
-  const response =
-    await axios.patch(
-
-      `${BASE_URL}/${userId}/edit`,
-
-      data,
-
-      {
-        headers:{
-          Authorization:
-          `Bearer ${token}`
-        }
-      }
-    );
-
-  return response.data;
-}
-
-export async function uploadAvatar(userId,formData){
-
-  const token =
-    localStorage.getItem("token");
+// UPDATE PROFILE
+export async function updateProfile(
+  userId,
+  formData
+) {
 
   const response =
-    await axios.patch(
-
-      `${BASE_URL}/${userId}/avatar`,
-
+    await API.patch(
+      `/users/${userId}/edit`,
       formData,
-
       {
-        headers:{
+        headers: {
           Authorization:
-          `Bearer ${token}`,
-
-          "Content-Type":
-          "multipart/form-data"
-        }
+            `Bearer ${localStorage.getItem("token")}`,
+        },
       }
     );
 
   return response.data;
 }
-export async function changePassword(userId,passwordData){
+
+// UPLOAD AVATAR
+export async function uploadAvatar(
+  userId,
+  avatarData
+) {
+
+  const response =
+    await API.patch(
+      `/users/${userId}/avatar`,
+      avatarData,
+      {
+        headers: {
+          Authorization:
+            `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type":
+            "multipart/form-data",
+        },
+      }
+    );
+
+  return response.data;
+}
+export async function changePassword(
+  userId,
+  passwordData
+) {
 
   const token =
     localStorage.getItem("token");
 
   const response =
-    await axios.patch(
+    await API.patch(
 
-      `${BASE_URL}/${userId}/password`,
+      `/users/${userId}/password`,
 
       passwordData,
 
       {
-        headers:{
+        headers: {
           Authorization:
-          `Bearer ${token}`
-        }
+            `Bearer ${token}`,
+        },
       }
     );
 

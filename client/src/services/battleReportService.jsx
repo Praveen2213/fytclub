@@ -1,10 +1,7 @@
-import axios from "axios";
-
-const API =
-  "http://localhost:3000/api/battles";
+import API from "./api";
 
 // ======================
-// GET BATTLE EVENTS
+// BATTLE EVENTS
 // ======================
 
 export async function getBattleEvents(
@@ -12,9 +9,9 @@ export async function getBattleEvents(
 ) {
 
   const response =
-    await axios.get(
+    await API.get(
 
-      `${API}/${battleId}/events`,
+      `/battles/${battleId}/events`,
 
       {
         headers: {
@@ -28,7 +25,7 @@ export async function getBattleEvents(
 }
 
 // ======================
-// GET AI INSIGHTS
+// AI INSIGHTS
 // ======================
 
 export async function getBattleInsights(
@@ -36,9 +33,9 @@ export async function getBattleInsights(
 ) {
 
   const response =
-    await axios.get(
+    await API.get(
 
-      `http://localhost:3000/api/history/${battleId}/insights`,
+      `/history/${battleId}/insights`,
 
       {
         headers: {

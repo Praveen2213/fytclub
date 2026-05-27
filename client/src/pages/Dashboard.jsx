@@ -11,6 +11,7 @@ from "react-router-dom";
 import {
   getActiveBattles
 } from "../services/battleService";
+import API from "../services/api";
 function Dashboard() {
 const navigate = useNavigate();
   // ======================
@@ -41,10 +42,86 @@ const [activeBattles, setActiveBattles] =
 
 const battleData =
   await getActiveBattles(userId);
-console.log(battleData);
+
+// ======================
+// FETCH REAL SCORES
+// ======================
+
+const battlesWithScores =
+  await Promise.all(
+
+    battleData.map(
+      async (battle) => {
+
+        const token =
+          localStorage.getItem(
+            "token"
+          );
+
+        const scoresResponse =
+          await API.get(
+
+            `/battles/${battle.id}/scores`,
+
+            {
+              headers: {
+                Authorization:
+                  `Bearer ${token}`,
+              },
+            }
+          );
+
+        const scores =
+          scoresResponse.data;
+
+        let challenger_score = 0;
+        let opponent_score = 0;
+
+        scores.forEach((score) => {
+
+          if (
+            Number(score.user_id) ===
+            Number(
+              battle.challenger_id
+            )
+          ) {
+
+            challenger_score =
+              Number(score.score);
+
+          } else if (
+            Number(score.user_id) ===
+            Number(
+              battle.opponent_id
+            )
+          ) {
+
+            opponent_score =
+              Number(score.score);
+          }
+        });
+
+        return {
+
+          ...battle,
+
+          challenger_score,
+
+          opponent_score,
+        };
+      }
+    )
+  );
+
+console.log(
+  battlesWithScores
+);
+
 setActiveBattles(
-  Array.isArray(battleData)
-    ? battleData
+  Array.isArray(
+    battlesWithScores
+  )
+    ? battlesWithScores
     : []
 );
       try {
@@ -166,17 +243,43 @@ setActiveBattles(
 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
   {
-    activeBattles.length === 0 ? (
+  activeBattles.length === 0 ? (
 
-      <div className="bg-slate-800 rounded-2xl p-6 text-slate-400">
+    <div className="bg-slate-800 rounded-2xl p-6 text-slate-400">
 
-        No active battles
+      No active battles
 
-      </div>
+    </div>
 
-    ) : (
+  ) : (
 
-      activeBattles.map((battle) => (
+    activeBattles.map((battle) => {
+
+      const currentUser =
+        Number(localStorage.getItem("userId"));
+
+      const yourPoints =
+        battle.challenger_id === currentUser
+          ? battle.challenger_score || 0
+          : battle.opponent_score || 0;
+
+      const opponentPoints =
+        battle.challenger_id === currentUser
+          ? battle.opponent_score || 0
+          : battle.challenger_score || 0;
+
+      const daysLeft = Math.max(
+        0,
+        Math.ceil(
+          (
+            new Date(battle.end_date) -
+            new Date()
+          ) /
+          (1000 * 60 * 60 * 24)
+        )
+      );
+
+      return (
 
         <div
           key={battle.id}
@@ -191,17 +294,26 @@ setActiveBattles(
         >
 
           <ActiveBattleCard
+
             opponent={
               battle.opponent_name
             }
 
-            daysLeft={7}
+            yourPoints={yourPoints}
+
+            opponentPoints={
+              opponentPoints
+            }
+
+            daysLeft={daysLeft}
+
           />
 
         </div>
-      ))
-    )
-  }
+      );
+    })
+  )
+}
 
 </div>
 </div>

@@ -1,52 +1,39 @@
-import axios from "axios";
+import API from "./api";
 
-const API =
-  "http://localhost:3000/api/history";
-
-// ======================
 // ACTIVITY HISTORY
-// ======================
-
 export async function getActivityHistory(
-  userId
-) {
+userId
+){
 
-  const response =
-    await axios.get(
+const response =
+await API.get(
+`/history/${userId}/activity_history`,
+{
+headers:{
+Authorization:
+`Bearer ${localStorage.getItem("token")}`
+}
+}
+);
 
-      `${API}/${userId}/activity_history`,
-
-      {
-        headers: {
-          Authorization:
-            `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-  return response.data;
+return response.data;
 }
 
-// ======================
 // BATTLE HISTORY
-// ======================
-
 export async function getBattleHistory(
-  userId
-) {
+userId
+){
 
-  const response =
-    await axios.get(
+const response =
+await API.get(
+`/history/${userId}/battle_history`,
+{
+headers:{
+Authorization:
+`Bearer ${localStorage.getItem("token")}`
+}
+}
+);
 
-      `${API}/${userId}/battle_history`,
-
-      {
-        headers: {
-          Authorization:
-            `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-  return response.data;
+return response.data;
 }

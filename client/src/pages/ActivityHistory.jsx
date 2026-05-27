@@ -36,7 +36,7 @@ function ActivityHistory() {
         const historyRes =
           await axios.get(
 
-            `http://localhost:3000/api/history/${userId}/activity_history`,
+            `${import.meta.env.VITE_API_URL}/history/${userId}/activity_history`,
 
             {
               headers: {
@@ -57,7 +57,7 @@ function ActivityHistory() {
         const dashboardRes =
           await axios.get(
 
-            "http://localhost:3000/api/dashboard",
+           `${import.meta.env.VITE_API_URL}/dashboard`,
 
             {
               headers: {
