@@ -1,7 +1,4 @@
-import axios from "axios";
-const API = axios.create({
-    baseURL: `${import.meta.env.VITE_API_URL}`,
-});
+import API from "./api";
 export async function getDashboardStats(){
     const token = localStorage.getItem("token");
     const response=await API.get(

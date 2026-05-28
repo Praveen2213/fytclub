@@ -5,8 +5,9 @@ import MainLayout from "../layouts/MainLayout";
 import {
   getActiveBattles,
   getPendingBattles,
-  getBattleHistory,
 } from "../services/battleService";
+
+import { getBattleHistory } from "../services/historyService";
 
 import { useNavigate } from "react-router-dom";
 

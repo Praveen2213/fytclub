@@ -120,34 +120,6 @@ export async function declineBattle(
   return response.data;
 }
 
-
-
-// ======================
-// BATTLE HISTORY
-// ======================
-
-export async function getBattleHistory(
-  userId
-) {
-
-  const response =
-    await API.get(
-
-      `/battles/history/${userId}`,
-
-      {
-        headers: {
-          Authorization:
-            `Bearer ${getToken()}`
-        }
-      }
-    );
-
-  return response.data;
-}
-
-
-
 // ======================
 // ACTIVE BATTLES
 // ======================
