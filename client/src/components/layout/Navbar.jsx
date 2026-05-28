@@ -1,13 +1,25 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate
+} from "react-router-dom";
+
+import { useState } from "react";
 
 function Navbar() {
 
-  const location = useLocation();
+  const location =
+    useLocation();
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const username =
     localStorage.getItem("username");
+
+  const [mobileMenu,
+    setMobileMenu] =
+    useState(false);
 
   function handleLogout() {
 
@@ -31,10 +43,12 @@ function Navbar() {
       name: "Battles",
       path: "/battles",
     },
-      {
-    name: "Battle History",
-    path: "/battle-history",
-  },
+
+    {
+      name: "Battle History",
+      path: "/battle-history",
+    },
+
     {
       name: "Leaderboard",
       path: "/leaderboard",
@@ -45,19 +59,18 @@ function Navbar() {
 
     <nav className="w-full bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
 
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
 
-        {/* LEFT */}
+        {/* ======================
+            LEFT LOGO
+        ====================== */}
 
         <Link
           to="/dashboard"
-
           className="flex items-center gap-3"
         >
 
-          {/* LOGO */}
-
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 flex items-center justify-center shadow-lg">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-pink-500 flex items-center justify-center shadow-lg">
 
             <span className="text-2xl font-black text-white">
 
@@ -69,13 +82,13 @@ function Navbar() {
 
           <div>
 
-            <h1 className="text-2xl font-black tracking-wide text-white">
+            <h1 className="text-xl sm:text-2xl font-black tracking-wide text-white">
 
               FYTCLUB
 
             </h1>
 
-            <p className="text-[10px] text-orange-400 tracking-widest">
+            <p className="text-[10px] text-orange-400 tracking-widest hidden sm:block">
 
               TRAIN • COMPETE • WIN
 
@@ -85,7 +98,9 @@ function Navbar() {
 
         </Link>
 
-        {/* CENTER */}
+        {/* ======================
+            DESKTOP NAV LINKS
+        ====================== */}
 
         <div className="hidden md:flex items-center gap-3">
 
@@ -116,9 +131,11 @@ function Navbar() {
 
         </div>
 
-        {/* RIGHT */}
+        {/* ======================
+            RIGHT SECTION
+        ====================== */}
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
 
           {/* START BATTLE */}
 
@@ -132,133 +149,203 @@ function Navbar() {
 
           </Link>
 
-          {/* NOTIFICATION */}
+          {/* PROFILE */}
 
-          <button className="relative bg-slate-800 hover:bg-slate-700 transition-all w-12 h-12 rounded-2xl flex items-center justify-center">
+          <div className="relative group hidden sm:block">
 
-            🔔
+            <button
+              className="
+              w-12 h-12 rounded-full
+              bg-gradient-to-br from-orange-500 to-red-500
+              flex items-center justify-center
+              text-white font-bold text-lg
+              shadow-lg
+              hover:scale-105 transition-all duration-300
+              border-2 border-slate-700
+            "
+            >
 
-            <span className="absolute -top-1 -right-1 bg-red-500 text-xs w-5 h-5 rounded-full flex items-center justify-center">
+              {
+                username
+                  ? username.charAt(0).toUpperCase()
+                  : "U"
+              }
 
-              2
+            </button>
 
-            </span>
+            {/* DROPDOWN */}
+
+            <div
+              className="
+              absolute right-0 mt-3
+              bg-slate-800 border border-slate-700
+              rounded-2xl shadow-2xl
+              opacity-0 invisible
+              group-hover:opacity-100
+              group-hover:visible
+              transition-all duration-300
+              w-56 overflow-hidden z-50
+            "
+            >
+
+              <div className="px-5 py-4 border-b border-slate-700">
+
+                <p className="text-sm text-slate-400">
+
+                  Signed in as
+
+                </p>
+
+                <h3 className="font-bold text-white mt-1">
+
+                  {username}
+
+                </h3>
+
+              </div>
+
+              <Link
+                to="/profile"
+
+                className="block px-5 py-4 hover:bg-slate-700 transition-all"
+              >
+
+                👤 Profile
+
+              </Link>
+
+              <Link
+                to="/activity-history"
+
+                className="block px-5 py-4 hover:bg-slate-700 transition-all"
+              >
+
+                📈 Activity History
+
+              </Link>
+
+              <button
+                onClick={handleLogout}
+
+                className="w-full text-left px-5 py-4 hover:bg-red-500 transition-all"
+              >
+
+                🚪 Logout
+
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* ======================
+              MOBILE MENU BUTTON
+          ====================== */}
+
+          <button
+
+            onClick={() =>
+              setMobileMenu(
+                !mobileMenu
+              )
+            }
+
+            className="md:hidden bg-slate-800 p-3 rounded-xl text-white"
+          >
+
+            {
+              mobileMenu
+                ? "✖"
+                : "☰"
+            }
 
           </button>
-
-       {/* PROFILE */}
-
-<div className="relative group">
-
-  {/* CIRCULAR PROFILE BUTTON */}
-
-  <button
-    className="
-      w-12 h-12 rounded-full
-      bg-gradient-to-br from-orange-500 to-red-500
-      flex items-center justify-center
-      text-white font-bold text-lg
-      shadow-lg
-      hover:scale-105 transition-all duration-300
-      border-2 border-slate-700
-    "
-  >
-
-    {
-      username
-        ? username.charAt(0).toUpperCase()
-        : "U"
-    }
-
-  </button>
-
-  {/* DROPDOWN */}
-
-  <div
-    className="
-      absolute right-0 mt-3
-      bg-slate-800 border border-slate-700
-      rounded-2xl shadow-2xl
-      opacity-0 invisible
-      group-hover:opacity-100
-      group-hover:visible
-      transition-all duration-300
-      w-56 overflow-hidden z-50
-    "
-  >
-
-    {/* USER INFO */}
-
-    <div className="px-5 py-4 border-b border-slate-700">
-
-      <p className="text-sm text-slate-400">
-
-        Signed in as
-
-      </p>
-
-      <h3 className="font-bold text-white mt-1">
-
-        {username}
-
-      </h3>
-
-    </div>
-
-    {/* PROFILE */}
-
-    <Link
-      to="/profile"
-
-      className="
-        block px-5 py-4
-        hover:bg-slate-700
-        transition-all
-      "
-    >
-
-      👤 Profile
-
-    </Link>
-
-    {/* HISTORY */}
-
-    <Link
-      to="/activity-history"
-
-      className="
-        block px-5 py-4
-        hover:bg-slate-700
-        transition-all
-      "
-    >
-
-      ⚔️ Activity History
-
-    </Link>
-    {/* LOGOUT */}
-
-    <button
-      onClick={handleLogout}
-
-      className="
-        w-full text-left px-5 py-4
-        hover:bg-red-500
-        transition-all
-      "
-    >
-
-      🚪 Logout
-
-    </button>
-
-  </div>
-
-</div>
 
         </div>
 
       </div>
+
+      {/* ======================
+          MOBILE MENU
+      ====================== */}
+
+      {
+        mobileMenu && (
+
+          <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 py-5 flex flex-col gap-3">
+
+            {
+              navLinks.map((link) => (
+
+                <Link
+                  key={link.path}
+
+                  to={link.path}
+
+                  onClick={() =>
+                    setMobileMenu(false)
+                  }
+
+                  className={`px-4 py-3 rounded-xl font-semibold transition-all
+
+                  ${
+                    location.pathname === link.path
+
+                    ? "bg-orange-500 text-white"
+
+                    : "bg-slate-800 text-slate-300"
+                  }`}
+                >
+
+                  {link.name}
+
+                </Link>
+              ))
+            }
+
+            <Link
+              to="/create-battle"
+
+              className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-3 rounded-xl font-bold text-center"
+            >
+
+              + Start Battle
+
+            </Link>
+
+            <Link
+              to="/profile"
+
+              className="bg-slate-800 px-4 py-3 rounded-xl"
+            >
+
+              👤 Profile
+
+            </Link>
+
+            <Link
+              to="/activity-history"
+
+              className="bg-slate-800 px-4 py-3 rounded-xl"
+            >
+
+              📈 Activity History
+
+            </Link>
+
+            <button
+              onClick={handleLogout}
+
+              className="bg-red-500 px-4 py-3 rounded-xl text-left font-semibold"
+            >
+
+              🚪 Logout
+
+            </button>
+
+          </div>
+        )
+      }
 
     </nav>
   );

@@ -138,7 +138,7 @@ function CreateBattle() {
       // CREATE INVITE LINK
 
       const inviteLink =
-        `${window.location.origin}/accept/${data.invite_token}`;
+        `${window.location.origin}/battle-request/${data.invite_token}`;
 
       setCreatedBattleLink(
         inviteLink

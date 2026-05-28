@@ -538,13 +538,19 @@ event.created_at
 
 </div>
 
-<div className={`text-2xl font-bold ${
-isDraw
-? "text-purple-300"
-: "text-orange-400"
-}`}>
+<div
+  className={`text-2xl font-bold ${
+    event.points_earned < 0
+      ? "text-red-400"
+      : isDraw
+      ? "text-purple-300"
+      : "text-orange-400"
+  }`}
+>
 
-+{event.points_earned}
+  {event.points_earned > 0
+    ? `+${event.points_earned}`
+    : event.points_earned}
 
 </div>
 
