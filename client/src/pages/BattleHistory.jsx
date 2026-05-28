@@ -115,101 +115,90 @@ function BattleHistory() {
         </div>
 
         {/* ======================
-            SUMMARY CARDS
-        ====================== */}
+    SUMMARY CARDS
+====================== */}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
 
-          {/* TOTAL BATTLES */}
+  {/* TOTAL BATTLES */}
 
-          <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
 
-            <h3 className="text-slate-400">
+    <h3 className="text-slate-400">
+      Total Battles
+    </h3>
 
-              Total Battles
+    <p className="text-3xl font-bold mt-2">
+      {battleHistory.length}
+    </p>
 
-            </h3>
+  </div>
 
-            <p className="text-3xl font-bold mt-2">
+  {/* WINS */}
 
-              {battleHistory.length}
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
 
-            </p>
+    <h3 className="text-slate-400">
+      Battles Won
+    </h3>
 
-          </div>
+    <p className="text-3xl font-bold mt-2 text-green-400">
 
-          {/* WINS */}
+      {
+        battleHistory.filter(
+          (battle) =>
+            battle.status !== "draw" &&
+            battle.winner_id === currentUser
+        ).length
+      }
 
-          <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+    </p>
 
-            <h3 className="text-slate-400">
+  </div>
 
-              Battles Won
+  {/* LOSSES */}
 
-            </h3>
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
 
-            <p className="text-3xl font-bold mt-2 text-green-400">
+    <h3 className="text-slate-400">
+      Battles Lost
+    </h3>
 
-             {
-  battleHistory.filter(
-    (battle) =>
-      battle.status !== "draw" &&
-      battle.winner_id === currentUser
-  ).length
-}
+    <p className="text-3xl font-bold mt-2 text-red-400">
 
-            </p>
+      {
+        battleHistory.filter(
+          (battle) =>
+            battle.status !== "draw" &&
+            battle.winner_id &&
+            battle.winner_id !== currentUser
+        ).length
+      }
 
-          </div>
+    </p>
 
-          {/* LOSSES */}
+  </div>
 
-          <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+  {/* DRAWS */}
 
-            <h3 className="text-slate-400">
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
 
-              Battles Lost
+    <h3 className="text-slate-400">
+      Draw Battles
+    </h3>
 
-            </h3>
+    <p className="text-3xl font-bold mt-2 text-yellow-400">
 
-            <p className="text-3xl font-bold mt-2 text-red-400">
+      {
+        battleHistory.filter(
+          (battle) =>
+            battle.status === "draw"
+        ).length
+      }
 
-            {
-  battleHistory.filter(
-    (battle) =>
+    </p>
 
-      battle.status !== "draw" &&
-      battle.winner_id &&
-      battle.winner_id !== currentUser
-
-  ).length
-}
-
-            </p>
-
-          </div>
-
-        </div>
-{/* DRAWS */}
-
-<div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
-
-  <h3 className="text-slate-400">
-
-    Draw Battles
-
-  </h3>
-
-  <p className="text-3xl font-bold mt-2 text-yellow-400">
-
-    {
-      battleHistory.filter(
-        (battle) =>
-          battle.status === "draw"
-      ).length
-    }
-
-  </p>
+  </div>
 
 </div>
         {/* ======================
@@ -336,13 +325,19 @@ if (battle.status === "draw") {
 
                         status={battle.status}
 
-                        startDate={
-                          battle.start_date
-                        }
+                      startDate={
+                      battle.status === "pending" ||
+                      battle.status === "declined"
+                       ? "N/A"
+                      : battle.start_date
+                      }
 
-                        endDate={
-                          battle.end_date
-                        }
+                      endDate={
+                      battle.status === "pending" ||
+                      battle.status === "declined"
+                    ? "N/A"
+                    : battle.end_date
+                    }
 
                       />
                     );
