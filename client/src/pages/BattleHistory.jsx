@@ -270,6 +270,15 @@ function BattleHistory() {
                         ? battle.opponent_score
 
                         : battle.challenger_score;
+                        const yourDare =
+  battle.challenger_id === currentUser
+    ? battle.challenger_dare
+    : battle.opponent_dare;
+
+const opponentDare =
+  battle.challenger_id === currentUser
+    ? battle.opponent_dare
+    : battle.challenger_dare;
 
              // ======================
 // RESULT
@@ -311,13 +320,8 @@ if (battle.status === "draw") {
 
                         opponentScore={opponentScore}
 
-                        challengerDare={
-                          battle.challenger_dare
-                        }
-
-                        opponentDare={
-                          battle.opponent_dare
-                        }
+                      challengerDare={yourDare}
+                      opponentDare={opponentDare}
 
                         activityTypes={
                           battle.activity_types
