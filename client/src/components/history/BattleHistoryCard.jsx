@@ -171,47 +171,47 @@ else {
 
         </div>
 
-        {/* DARES */}
+{/* DARES */}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
 
-          {/* YOUR DARE */}
+  {/* YOUR DARE */}
 
-          <div className="bg-orange-500/10 border border-orange-500 rounded-2xl p-5">
+  <div className="bg-orange-500/10 border border-orange-500 rounded-2xl p-5">
 
-            <h3 className="text-orange-300 font-bold mb-3">
+    <h3 className="text-orange-300 font-bold mb-3">
 
-              Your Dare 🎯
+      Your Dare 🎯
 
-            </h3>
+    </h3>
 
-            <p className="text-slate-300">
+    <p className="text-slate-300">
 
-              {opponentDare || "No dare"}
+      {challengerDare || "No dare"}
 
-            </p>
+    </p>
 
-          </div>
+  </div>
 
-          {/* OPPONENT DARE */}
+  {/* OPPONENT DARE */}
 
-          <div className="bg-blue-500/10 border border-blue-500 rounded-2xl p-5">
+  <div className="bg-blue-500/10 border border-blue-500 rounded-2xl p-5">
 
-            <h3 className="text-blue-300 font-bold mb-3">
+    <h3 className="text-blue-300 font-bold mb-3">
 
-              Opponent Dare 🔥
+      Opponent Dare 🔥
 
-            </h3>
+    </h3>
 
-            <p className="text-slate-300">
+    <p className="text-slate-300">
 
-              {challengerDare || "No dare"}
+      {opponentDare || "No dare"}
 
-            </p>
+    </p>
 
-          </div>
+  </div>
 
-        </div>
+</div>
 
         {/* ACTIVITIES */}
 
