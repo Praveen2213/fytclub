@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import AuthInput from "../components/auth/AuthInput";
 import {signupUser} from "../services/authService";
+import AuthButton from "../components/auth/AuthButton";
 function Signup(){
     const [name,setName]=useState("");
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [loading,setLoading]=useState(false);
     const [error,setError]=useState("");
+    const navigate = useNavigate();
     async function handleSignup(e){
         e.preventDefault();
         setError("");
@@ -19,25 +21,24 @@ function Signup(){
             setError("Password must be at least 6 characters");
             return;
         }
-        try{  //send to backend for response in data
+        try{  // Send signup request to backend
             setLoading(true);
-            const data = await signupUser({
-                username:name,
-                email,
-                password,
-            });
-            console.log(data);
-            alert("Signup successfull");
+          const data = await signupUser({
+    username: name,
+    email,
+    password,
+});
+
+localStorage.setItem("token", data.token);
+localStorage.setItem("userId", data.userId);
+localStorage.setItem("username", data.username);
+
+navigate("/dashboard");
         }catch(error){
             console.log(
-      error.response.data
+      error.response?.data
    );
 
-   alert(
-      JSON.stringify(
-         error.response.data
-      )
-   );
             setError( //optional chaining prevents if something is undefined
                 error.response?.data?.message || "Something went wrong" //fallback error
             );
@@ -84,13 +85,11 @@ function Signup(){
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-blue-500 hover:bg-blue-600 p-3 rounded-lg font-semibold"
-          >
-            {loading ? "Creating Account..." : "Signup"}
-          </button>
+        <AuthButton
+    text="Signup"
+    loading={loading}
+    disabled={loading}
+/>
         </form>
 
         <p className="mt-4 text-center text-sm">
