@@ -60,7 +60,11 @@ function Login(){
     return(
          <div className="min-h-screen flex items-center justify-center bg-slate-900">
 
-      <div className="bg-slate-800 p-8 rounded-2xl w-[350px] shadow-xl">
+      <div
+  className={`bg-slate-800 p-8 rounded-2xl w-[350px] shadow-xl transition-all duration-300 ${
+    loading ? "scale-95 opacity-90" : "scale-100 opacity-100"
+  }`}
+>
 
         <h1 className="text-3xl font-bold text-center mb-6">
           FYTCLUB
@@ -70,7 +74,7 @@ function Login(){
           onSubmit={handleLogin}
           className="flex flex-col gap-4"
         >
-
+{/* 
           <AuthInput
             type="email"
             placeholder="Enter Email"
@@ -83,16 +87,34 @@ function Login(){
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
+          /> */}
+
+          <AuthInput
+  type="email"
+  placeholder="Enter Email"
+  value={email}
+  disabled={loading}
+  onChange={(e) => setEmail(e.target.value)}
+/>
+
+<AuthInput
+  type="password"
+  placeholder="Enter Password"
+  value={password}
+  disabled={loading}
+  onChange={(e) => setPassword(e.target.value)}
+/>
         {error && (
   <       p className="text-red-400 text-sm">
          {error}
         </p>
         )}
-          <AuthButton text="Login" />
-          {/* <button disabled={loading}>
-           {loading ? "Logging in..." : "Login"}
-           </button> */}
+
+        <AuthButton
+  text="Login"
+  loading={loading}
+  disabled={loading}
+/>
 
         </form>
 
