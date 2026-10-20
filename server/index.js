@@ -3,6 +3,7 @@ const cors = require('cors');
 const startCronJobs = require('./cron');
 const express = require('express');
 const app = express();
+app.set('trust proxy', 1);
 //for socket.io 
 const http = require('http');
 const server = http.createServer(app);
