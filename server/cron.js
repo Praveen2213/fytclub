@@ -1,10 +1,11 @@
-const cron = require("node-cron");
+//const cron = require("node-cron");
 const pool = require("./db");
 const { generateInsight } = require("./ai");
 
-const startCronJobs = (io) => {
+//const startCronJobs = (io) => {
+  const runBattleJobs = async (io) => {
   // Cron job — har ghante expired battles check karo aur winner decide karo
-  cron.schedule("0 * * * *", async () => {
+  //cron.schedule("0 * * * *", async () => {
     console.log("Checking for completed battles...");
 
     const expiredBattles = await pool.query(
@@ -12,13 +13,30 @@ const startCronJobs = (io) => {
     );
 
     for (const battle of expiredBattles.rows) {
+      const client = await pool.connect();
+      let committed = false;
     try {
-      const scores = await pool.query(
+      await client.query("BEGIN");
+
+      const claimed = await client.query(
+        `SELECT id FROM battles
+         WHERE id = $1 AND status = 'active' AND end_date < NOW()
+         FOR UPDATE SKIP LOCKED`,
+        [battle.id],
+      );
+      if (claimed.rows.length === 0) {
+        await client.query("ROLLBACK");
+        continue; // finally block still releases the client
+      }
+
+      //const scores = await pool.query(
+      const scores = await client.query(
         "SELECT * FROM battle_scores WHERE battle_id = $1",
         [battle.id],
       );
 
       if (scores.rows.length < 2) {
+          await client.query("ROLLBACK");
           console.log(`Battle ${battle.id} skipped — not enough players`);
           continue;
       }
@@ -28,10 +46,14 @@ const startCronJobs = (io) => {
 
       //Draw Handler
       if (score1.score === score2.score) {
-          await pool.query(
+          //await pool.query(
+          await client.query(
             "UPDATE battles SET status = 'draw', winner_id = NULL WHERE id = $1",
             [battle.id],
           );
+
+          await client.query("COMMIT");
+          committed = true;
 
           const drawPrompt = `You are a fitness battle analyst. Write a short exciting draw announcement (max 30 words).
           Both players scored ${score1.score} points each. It's a perfect tie! Make it dramatic.`;
@@ -57,22 +79,28 @@ const startCronJobs = (io) => {
       const winner =
         score1.score > score2.score ? score1.user_id : score2.user_id;
 
-      await pool.query(
+      //await pool.query(
+      await client.query(
         "UPDATE battles SET status = 'completed', winner_id = $1 WHERE id = $2",
         [winner, battle.id],
       );
 
-      await pool.query(
+      //await pool.query(
+      await client.query(
         "UPDATE users SET total_wins = total_wins + 1 WHERE id = $1",
         [winner],
       );
 
       const loser = winner === score1.user_id ? score2.user_id : score1.user_id;
 
-      await pool.query(
+      //await pool.query(
+      await client.query(
         "UPDATE users SET total_losses = total_losses + 1 WHERE id = $1",
         [loser],
       );
+
+      await client.query("COMMIT");
+      committed = true;
 
       const winner_name = await pool.query(
         "SELECT username FROM users WHERE id = $1",
@@ -115,7 +143,10 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
 
       console.log(`Final report generated for battle ${battle.id}`);
     } catch (err) {
+        if (!committed) await client.query("ROLLBACK");
         console.error(`Error processing battle ${battle.id}:`, err.message);
+    }finally{
+      client.release();
     }
   }
 
@@ -125,6 +156,7 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
     );
 
     for (const battle of midBattles.rows) {
+      let claimedMid = false;
     try{
       const scores = await pool.query(
         "SELECT bs.user_id, bs.score, u.username FROM battle_scores bs JOIN users u ON u.id = bs.user_id WHERE bs.battle_id = $1 ORDER BY bs.score ASC",
@@ -135,6 +167,12 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
           console.log(`Battle ${battle.id} midweek skipped — not enough players`);
           continue;
       }
+      const claimedRows = await pool.query(
+        "UPDATE battles SET midweek_sent = true WHERE id = $1 AND status = 'active' AND midweek_sent = false RETURNING id",
+        [battle.id],
+      );
+      if (claimedRows.rows.length === 0) continue;
+      claimedMid = true;
 
       const losingPlayer = scores.rows[0]; // sabse kam score
       const leadingPlayer = scores.rows[1]; // sabse zyada score
@@ -154,7 +192,7 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
             );
           }
 
-          await pool.query("UPDATE battles SET midweek_sent = true WHERE id = $1", [battle.id]);
+          // await pool.query("UPDATE battles SET midweek_sent = true WHERE id = $1", [battle.id]);
 
           io.to(`battle_${battle.id}`).emit("midweek_analysis", {
             isDraw: true,
@@ -176,22 +214,26 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
         [battle.id, losingPlayer.user_id, midMessage, "midweek"],
       );
 
-      await pool.query("UPDATE battles SET midweek_sent = true WHERE id = $1", 
-        [battle.id]
-      );
+      // await pool.query("UPDATE battles SET midweek_sent = true WHERE id = $1", 
+      //   [battle.id]
+      // );
 
       io.to(`battle_${battle.id}`).emit("midweek_analysis", {
         isDraw: false,
         userId: losingPlayer.user_id,
-        message: response,
+        //message: response,
+        message:midMessage,
       });
 
       console.log(`Midweek analysis sent for battle ${battle.id}`);
     }catch (err) {
+        if (claimedMid) {
+            await pool.query("UPDATE battles SET midweek_sent = false WHERE id = $1", [battle.id]);
+          }
         console.error(`Error processing midweek for battle ${battle.id}:`, err.message);
       }
     }
-  });
 };
 
-module.exports = startCronJobs;
+//module.exports = startCronJobs;
+module.exports = runBattleJobs;

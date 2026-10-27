@@ -1,6 +1,6 @@
 require('dotenv').config();
 const cors = require('cors');
-const startCronJobs = require('./cron');
+//const startCronJobs = require('./cron');
 const express = require('express');
 const app = express();
 app.set('trust proxy', 1);
@@ -9,6 +9,7 @@ const http = require('http');
 const server = http.createServer(app);
 const {Server} = require('socket.io');
 const io = new Server(server);
+app.set('io', io);
 //done here 
 const authRoutes = require('./routes/auth');
 const usersProfileRoutes = require('./routes/users');
@@ -16,6 +17,7 @@ const activitiesRoutes = require('./routes/activities')(io);
 const battleRoutes = require('./routes/battles')(io);
 const dashboardRoutes = require("./routes/dashboard");
 const historyRoutes = require("./routes/history");
+const internalRoutes = require('./routes/internal');
 
 // Socket.io — real-time connection handler
 io.on('connection', (socket)=>{
@@ -39,7 +41,7 @@ app.use(cors({
     credentials: true
 }));
 
-startCronJobs(io);
+//startCronJobs(io);
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);
@@ -48,6 +50,7 @@ app.use('/api/activities', activitiesRoutes);
 app.use('/api/battles', battleRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/history", historyRoutes);
+app.use('/api/internal', internalRoutes);
 
 //global error handler
 app.use((err, req, res, next) => {
