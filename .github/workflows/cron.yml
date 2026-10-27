@@ -1,0 +1,19 @@
+name: Complete battles
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"   # every 30 min (UTC), at minute 7 and 37
+  workflow_dispatch:          # lets you run it manually
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call battle completion route
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail --silent --show-error -X POST "$APP_URL/api/internal/complete-battles" \
+            -H "x-cron-secret: $CRON_SECRET" \
+            --max-time 120 --retry 2 --retry-delay 10
