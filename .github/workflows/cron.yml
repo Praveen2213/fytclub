@@ -2,7 +2,7 @@ name: Complete battles
 
 on:
   schedule:
-    - cron: "7,37 * * * *"   # every 30 min (UTC), at minute 7 and 37
+      - cron: "23,53 * * * *"   # every 30 min (UTC), away from busy slots
   workflow_dispatch:          # lets you run it manually
 
 jobs:
