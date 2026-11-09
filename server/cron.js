@@ -1,11 +1,8 @@
-//const cron = require("node-cron");
 const pool = require("./db");
 const { generateInsight } = require("./ai");
 
-//const startCronJobs = (io) => {
   const runBattleJobs = async (io) => {
   // Cron job — har ghante expired battles check karo aur winner decide karo
-  //cron.schedule("0 * * * *", async () => {
     console.log("Checking for completed battles...");
 
     const expiredBattles = await pool.query(
@@ -29,7 +26,6 @@ const { generateInsight } = require("./ai");
         continue; // finally block still releases the client
       }
 
-      //const scores = await pool.query(
       const scores = await client.query(
         "SELECT * FROM battle_scores WHERE battle_id = $1",
         [battle.id],
@@ -46,7 +42,6 @@ const { generateInsight } = require("./ai");
 
       //Draw Handler
       if (score1.score === score2.score) {
-          //await pool.query(
           await client.query(
             "UPDATE battles SET status = 'draw', winner_id = NULL WHERE id = $1",
             [battle.id],
@@ -79,13 +74,11 @@ const { generateInsight } = require("./ai");
       const winner =
         score1.score > score2.score ? score1.user_id : score2.user_id;
 
-      //await pool.query(
       await client.query(
         "UPDATE battles SET status = 'completed', winner_id = $1 WHERE id = $2",
         [winner, battle.id],
       );
 
-      //await pool.query(
       await client.query(
         "UPDATE users SET total_wins = total_wins + 1 WHERE id = $1",
         [winner],
@@ -93,7 +86,6 @@ const { generateInsight } = require("./ai");
 
       const loser = winner === score1.user_id ? score2.user_id : score1.user_id;
 
-      //await pool.query(
       await client.query(
         "UPDATE users SET total_losses = total_losses + 1 WHERE id = $1",
         [loser],
@@ -192,8 +184,6 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
             );
           }
 
-          // await pool.query("UPDATE battles SET midweek_sent = true WHERE id = $1", [battle.id]);
-
           io.to(`battle_${battle.id}`).emit("midweek_analysis", {
             isDraw: true,
             message: tieMessage,
@@ -214,14 +204,9 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
         [battle.id, losingPlayer.user_id, midMessage, "midweek"],
       );
 
-      // await pool.query("UPDATE battles SET midweek_sent = true WHERE id = $1", 
-      //   [battle.id]
-      // );
-
       io.to(`battle_${battle.id}`).emit("midweek_analysis", {
         isDraw: false,
         userId: losingPlayer.user_id,
-        //message: response,
         message:midMessage,
       });
 
@@ -234,6 +219,4 @@ Winner is ${winner_name.rows[0].username}. Make it exciting and motivational.`;
       }
     }
 };
-
-//module.exports = startCronJobs;
 module.exports = runBattleJobs;
