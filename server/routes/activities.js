@@ -74,6 +74,8 @@ router.post("/", authMiddleware, activityLimit, validateActivity, wrapAsync(asyn
     `SELECT * FROM battles 
      WHERE (challenger_id = $1 OR opponent_id = $1) 
      AND status = 'active'
+     AND start_date <= NOW()
+     AND end_date > NOW()
      AND $2 = ANY(activity_types)`,
     [user_id, type]
   );
